@@ -6,6 +6,14 @@ export default [
   },{
     command: '\\sqrt{}',
     example: '\\sqrt{a}',
-    descriptions: ['square root', 'root'],
+    descriptions: ['square root', 'root', 'sqrt'],
+  },{
+    command: '\\geq',
+    example: '\\geq',
+    descriptions: ['greater than or equal to', 'greater than equal to'],
+  },{
+    command: '\\leq',
+    example: '\\leq',
+    descriptions: ['lesser than or equal to', 'lesser than equal to'],
   },
 ]
