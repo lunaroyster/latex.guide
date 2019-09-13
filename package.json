@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.4.2",
+    "classnames": "^2.2.6",
     "fuse.js": "^3.4.5",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
