@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MathJax from 'react-mathjax';
+import MathJax from 'react-mathjax2';
 import './App.css';
 
 import Commands from './Commands';
@@ -39,14 +39,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey}/>
-        <MathJax.Provider>
-          {searchResult.map(r => (
-            <div key={r.command}>{r.descriptions[0]}
-              <MathJax.Node inline formula={r.example} />
-            </div>
-          ))}
-        </MathJax.Provider>
+        <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey} id="searchBox" />
+        <MathJax.Context input='tex'>
+          <div>
+            {searchResult.map(r => (
+              <div key={r.command}>{r.descriptions[0]}
+                <MathJax.Node inline>{r.example}</MathJax.Node>
+              </div>
+            ))}
+          </div>
+        </MathJax.Context>
       </header>
     </div>
   );
