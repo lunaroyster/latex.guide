@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import MathJax from 'react-mathjax2';
+
+import Card from '@material-ui/core/Card';
+import { CardContent, Table, TableRow, TableCell } from '@material-ui/core';
+
 import './App.css';
 
 import Commands from './Commands';
@@ -45,13 +49,15 @@ function App() {
       <input onChange={e => updateSearch(e)} value={searchTerm} ref={searchInput} onKeyPress={pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
       <MathJax.Context input='tex'>
         <div>
-          {searchResult.map((r,i) => (
-            <div key={r.command} className="result">
-              <span style={{paddingRight: '1em'}}>{r.descriptions[0]}</span>
-              <code style={{paddingRight: '1em'}}>{r.command}</code>
-              <MathJax.Node inline>{r.example}</MathJax.Node>
-            </div>
-          ))}
+          <Table>
+            {searchResult.map((r,i) => (
+              <TableRow key={r.command} className="result">
+                <TableCell>{r.descriptions[0]}</TableCell>
+                <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
+                <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
+              </TableRow>
+            ))}
+          </Table>
         </div>
       </MathJax.Context>
     </div>
