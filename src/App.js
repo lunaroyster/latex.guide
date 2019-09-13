@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef  } from 'react';
 import MathJax from 'react-mathjax2';
+import classNames from 'classnames';
 
-import Card from '@material-ui/core/Card';
-import { CardContent, Table, TableRow, TableCell } from '@material-ui/core';
+import { Table, TableRow, TableCell, TableBody } from '@material-ui/core';
 
 import './App.css';
 
@@ -44,19 +44,28 @@ function App() {
       }
     }
   }
+  let keyDown = e => {
+    if (e.key === 'Tab') {
+      selectResult(selectedResult+1);
+    }
+    if (e.key === 'ArrowDown') selectResult(selectedResult+1);
+    if (e.key === 'ArrowUp') selectResult(selectedResult-1);
+  }
   return (
     <div className="App">
-      <input onChange={e => updateSearch(e)} value={searchTerm} ref={searchInput} onKeyPress={pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+      <input onChange={e => updateSearch(e)} value={searchTerm} ref={searchInput} onKeyPress={pressKey} onKeyDown={keyDown} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
       <MathJax.Context input='tex'>
         <div>
           <Table>
-            {searchResult.map((r,i) => (
-              <TableRow key={r.command} className="result">
-                <TableCell>{r.descriptions[0]}</TableCell>
-                <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
-                <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
-              </TableRow>
-            ))}
+            <TableBody>
+              {searchResult.map((r,i) => (
+                <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})}>
+                  <TableCell>{r.descriptions[0]}</TableCell>
+                  <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
+                  <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </div>
       </MathJax.Context>
