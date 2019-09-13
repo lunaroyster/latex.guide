@@ -39,8 +39,8 @@ function App() {
   }
   let pressKey = e => {
     if (e.key === 'Enter') {
-      if (searchResult[0]) {
-        copyToClipboard(searchResult[0].command);
+      if (searchResult[selectedResult]) {
+        copyToClipboard(searchResult[selectedResult].command);
       }
     }
   }
