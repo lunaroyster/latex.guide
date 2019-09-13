@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef  } from 'react';
+import React, { Component, createRef } from 'react';
 import MathJax from 'react-mathjax2';
 import classNames from 'classnames';
 
@@ -14,12 +14,21 @@ const searchConfig = {
   keys: ['command', 'descriptions'],
 };
 
-function App() {
-  const latexSearch = new Fuse(Commands, searchConfig);
-  const [searchTerm, setSearchTerm] = useState('');
-  let [searchResult, setSearchResult] = useState([]);
-  let [selectedResult, selectResult] = useState(0);
-  let copyToClipboard = async text => {
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.searchInput = createRef();
+    this.latexSearch = new Fuse(Commands, searchConfig);
+  }
+  componentDidMount() {
+    this.searchInput.current.focus();
+  }
+  state = {
+    searchTerm: '',
+    searchResult: [],
+    selectedResult: 0,
+  }  
+  copyToClipboard = async text => {
     try {
       let clipboardPerms = await navigator.permissions.query({name: "clipboard-write"});
       if (clipboardPerms.state === "granted" || clipboardPerms.state === "prompt") {
@@ -28,55 +37,62 @@ function App() {
     } catch (e) {
       console.log(e);
     }
-  }
-  const searchInput = useRef(null);
-  useEffect(()=>searchInput.current.focus(), []);
-  let updateSearch = e => {
+  }  
+  updateSearch = e => {
     let term = e.target.value;
-    setSearchTerm(term);
-    setSearchResult(latexSearch.search(term));
-    selectResult(0);
+    let results = this.latexSearch.search(term);
+    this.setState({
+      searchTerm: term,
+      searchResult: results,
+      selectedResult: 0,
+    });
   }
-  let pressKey = e => {
+  pressKey = e => {
     if (e.key === 'Enter') {
-      if (searchResult[selectedResult]) {
-        copyToClipboard(searchResult[selectedResult].command);
+      if (this.state.searchResult[this.state.selectedResult]) {
+        this.copyToClipboard(this.state.searchResult[this.state.selectedResult].command);
       }
     }
   }
-  let selectNext = () => {
+  selectNext = () => {
+    let { selectedResult, searchResult } = this.state;
     let index = selectedResult+1 >= searchResult.length ? 0 : selectedResult+1;
-    selectResult(index);
+    this.setState({selectedResult: index});
   }
-  let selectPrevious = () => {
+  selectPrevious = () => {
+    let { selectedResult, searchResult } = this.state;
     let index = selectedResult === 0 ? searchResult.length-1 : selectedResult-1;
-    selectResult(index);
+    this.setState({selectedResult: index});
   }
-  let keyDown = e => {
-    if (e.key === 'Tab') selectNext();
-    if (e.key === 'ArrowDown') selectNext();
-    if (e.key === 'ArrowUp') selectPrevious();
+  keyDown = e => {
+    if (e.key === 'Tab') this.selectNext();
+    if (e.key === 'ArrowDown') this.selectNext();
+    if (e.key === 'ArrowUp') this.selectPrevious();
+  };
+  render() {
+    let { searchTerm, selectedResult, searchResult } = this.state;
+    return (
+      <div className="App">
+        <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} onKeyDown={this.keyDown} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+        <MathJax.Context input='tex'>
+          <div>
+            {selectedResult}
+            <Table>
+              <TableBody>
+                {searchResult.map((r,i) => (
+                  <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})}>
+                    <TableCell>{r.descriptions[0]}</TableCell>
+                    <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
+                    <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </MathJax.Context>
+      </div>
+    );
   }
-  return (
-    <div className="App">
-      <input onChange={e => updateSearch(e)} value={searchTerm} ref={searchInput} onKeyPress={pressKey} onKeyDown={keyDown} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
-      <MathJax.Context input='tex'>
-        <div>
-          <Table>
-            <TableBody>
-              {searchResult.map((r,i) => (
-                <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})}>
-                  <TableCell>{r.descriptions[0]}</TableCell>
-                  <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
-                  <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </MathJax.Context>
-    </div>
-  );
 }
 
 export default App;
