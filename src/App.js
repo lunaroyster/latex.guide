@@ -35,6 +35,9 @@ class App extends Component {
         await navigator.clipboard.writeText(text);
       };
     } catch (e) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {console.log(e);}
       console.log(e);
     }
   }  
@@ -76,7 +79,6 @@ class App extends Component {
         <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} onKeyDown={this.keyDown} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
         <MathJax.Context input='tex'>
           <div>
-            {selectedResult}
             <Table>
               <TableBody>
                 {searchResult.map((r,i) => (
