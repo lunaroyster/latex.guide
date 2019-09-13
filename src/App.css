@@ -18,3 +18,7 @@
 #searchBox::placeholder {
   color: #cccccc;
 }
+
+.result {
+  padding: 2em 1em;
+}
