@@ -38,19 +38,17 @@ function App() {
   }
   return (
     <div className="App">
-      <header className="App-header">
-        <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey} id="searchBox" placeholder="Describe your math symbol..." />
-        <MathJax.Context input='tex'>
-          <div>
-            {searchResult.map(r => (
-              <div key={r.command}>{r.descriptions[0]}
-                <code>{r.command}</code>
-                <MathJax.Node inline>{r.example}</MathJax.Node>
-              </div>
-            ))}
-          </div>
-        </MathJax.Context>
-      </header>
+      <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey} id="searchBox" placeholder="Describe your math symbol..." />
+      <MathJax.Context input='tex'>
+        <div>
+          {searchResult.map(r => (
+            <div key={r.command}>{r.descriptions[0]}
+              <code>{r.command}</code>
+              <MathJax.Node inline>{r.example}</MathJax.Node>
+            </div>
+          ))}
+        </div>
+      </MathJax.Context>
     </div>
   );
 }

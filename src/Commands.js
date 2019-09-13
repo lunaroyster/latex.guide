@@ -27,5 +27,9 @@ export default [
     command: '\\pm',
     example: '\\pm',
     descriptions: ['plus-minus', '+-'],
+  },{
+    command: '=',
+    example: '=',
+    descriptions: ['equals', 'is equal to'],
   },
 ]
