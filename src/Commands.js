@@ -10,10 +10,18 @@ export default [
   },{
     command: '\\geq',
     example: '\\geq',
-    descriptions: ['greater than or equal to', 'greater than equal to'],
+    descriptions: ['greater than or equal to', 'greater than equal to', '>='],
   },{
     command: '\\leq',
     example: '\\leq',
-    descriptions: ['lesser than or equal to', 'lesser than equal to'],
+    descriptions: ['lesser than or equal to', 'lesser than equal to', '<='],
+  },{
+    command: '<',
+    example: '<',
+    descriptions: ['lesser than', '<'],
+  },{
+    command: '>',
+    example: '>',
+    descriptions: ['greater than', '>'],
   },
 ]
