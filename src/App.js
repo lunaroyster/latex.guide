@@ -44,12 +44,18 @@ function App() {
       }
     }
   }
+  let selectNext = () => {
+    let index = selectedResult+1 >= searchResult.length ? 0 : selectedResult+1;
+    selectResult(index);
+  }
+  let selectPrevious = () => {
+    let index = selectedResult === 0 ? searchResult.length-1 : selectedResult-1;
+    selectResult(index);
+  }
   let keyDown = e => {
-    if (e.key === 'Tab') {
-      selectResult(selectedResult+1);
-    }
-    if (e.key === 'ArrowDown') selectResult(selectedResult+1);
-    if (e.key === 'ArrowUp') selectResult(selectedResult-1);
+    if (e.key === 'Tab') selectNext();
+    if (e.key === 'ArrowDown') selectNext();
+    if (e.key === 'ArrowUp') selectPrevious();
   }
   return (
     <div className="App">
