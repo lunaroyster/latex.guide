@@ -39,7 +39,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey} id="searchBox" />
+        <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey} id="searchBox" placeholder="Describe your math symbol..." />
         <MathJax.Context input='tex'>
           <div>
             {searchResult.map(r => (

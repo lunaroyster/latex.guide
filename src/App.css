@@ -17,3 +17,7 @@
   border-bottom: 1px solid;
   font-size: 2em;
 }
+
+#searchBox::placeholder {
+  color: #bbbbbb;
+}

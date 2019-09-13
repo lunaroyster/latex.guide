@@ -23,5 +23,9 @@ export default [
     command: '>',
     example: '>',
     descriptions: ['greater than', '>'],
+  },{
+    command: '\\pm',
+    example: '\\pm',
+    descriptions: ['plus-minus', '+-'],
   },
 ]
