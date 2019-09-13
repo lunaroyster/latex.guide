@@ -14,11 +14,11 @@ export default [
   },{
     command: '\\leq',
     example: '\\leq',
-    descriptions: ['lesser than or equal to', 'lesser than equal to', '<='],
+    descriptions: ['less than or equal to', 'lesser than equal to', '<='],
   },{
     command: '<',
     example: '<',
-    descriptions: ['lesser than', '<'],
+    descriptions: ['less than', '<'],
   },{
     command: '>',
     example: '>',
