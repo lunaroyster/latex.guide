@@ -31,5 +31,9 @@ export default [
     command: '=',
     example: '=',
     descriptions: ['equals', 'is equal to'],
+  },{
+    command: '\\sqrt[n]{}',
+    example: '\\sqrt[n]{a}',
+    descriptions: ['nth root'],
   },
 ]
