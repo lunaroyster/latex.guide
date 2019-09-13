@@ -47,8 +47,8 @@ function App() {
         <div>
           {searchResult.map((r,i) => (
             <div key={r.command} className="result">
-              {r.descriptions[0]}
-              <code>{r.command}</code>
+              <span style={{paddingRight: '1em'}}>{r.descriptions[0]}</span>
+              <code style={{paddingRight: '1em'}}>{r.command}</code>
               <MathJax.Node inline>{r.example}</MathJax.Node>
             </div>
           ))}
