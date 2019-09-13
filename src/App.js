@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import MathJax from 'react-mathjax';
 import './App.css';
 
 import Commands from './Commands';
@@ -40,9 +40,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         <input onChange={e => updateSearch(e)} value={searchTerm} onKeyPress={pressKey}/>
-        {searchResult.map(r => (
-          <div key={r.command}>{r.descriptions[0]}{r.command}</div>
-        ))}
+        <MathJax.Provider>
+          {searchResult.map(r => (
+            <div key={r.command}>{r.descriptions[0]}
+              <MathJax.Node inline formula={r.example} />
+            </div>
+          ))}
+        </MathJax.Provider>
       </header>
     </div>
   );
