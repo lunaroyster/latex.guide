@@ -82,7 +82,7 @@ class App extends Component {
             <Table>
               <TableBody>
                 {searchResult.map((r,i) => (
-                  <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})}>
+                  <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1}>
                     <TableCell>{r.descriptions[0]}</TableCell>
                     <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
                     <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>

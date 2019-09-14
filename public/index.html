@@ -49,5 +49,16 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      async function newUserPing() {
+        try {
+          let visitedBefore = localStorage.getItem('visitedBefore');
+          if (visitedBefore) return;
+          fetch('https://us-central1-random-arts.cloudfunctions.net/visitedLatexSearch');
+          localStorage.setItem('visitedBefore', true);
+        } catch (e) {}
+      }
+      newUserPing();
+    </script>
   </body>
 </html>
