@@ -21,6 +21,12 @@
 
 .result {
   /* padding: 2em 1em; */
+  cursor: pointer;
+}
+
+.result:hover {
+  background-color: #e8e8e8;
+  transition: 0.2s all;
 }
 
 .result.selected {

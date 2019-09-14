@@ -59,6 +59,9 @@ class App extends Component {
       selectedResult: 0,
     });
   }
+  clickResult = index => {
+    this.setState({selectedResult: index});
+  }
   pressKey = e => {
     if (e.key === 'Enter') {
       if (this.state.searchResult[this.state.selectedResult]) {
@@ -121,13 +124,13 @@ class App extends Component {
                 </colgroup>
                 <TableBody>
                   {searchResult.map(({item: r, matches}, i) => (
-                    <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1}>
+                    <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1} onClick={() => this.clickResult(i)}>
                       <TableCell colSpan={1}>
                         {this.getVisibleDescriptions(r, matches).map(d => (
                           <div key={d}>"{d}"</div>
                         ))}
                       </TableCell>
-                      <TableCell colSpan={1}><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
+                      <TableCell colSpan={1} onClick={()=>this.copyToClipboard(r.command)}><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
                       <TableCell colSpan={1} style={{textAlign: 'center'}}>
                         <span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span>
                       </TableCell>
