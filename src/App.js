@@ -73,7 +73,7 @@ class App extends Component {
   }
   scrollToResult = () => {
     let selectedResult = document.querySelector('.result.selected');
-    selectedResult.scrollIntoViewIfNeeded()
+    if (selectedResult) selectedResult.scrollIntoViewIfNeeded()
   }
   selectNext = () => {
     let { selectedResult, searchResult } = this.state;

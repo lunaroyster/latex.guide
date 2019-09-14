@@ -203,5 +203,21 @@ export default [
     command: '\\underline{}',
     example: '\\underline{I}',
     descriptions: ['Underline'],
+  },{
+    command: '\\sum_{}^{}',
+    example: '\\sum_{n=0}^{\\infty} x',
+    descriptions: ['Sum', 'summation', 'Sigma'],
+  },{
+    command: '\\prod_{}^{}',
+    example: '\\prod_{n=0}^{\\infty} x',
+    descriptions: ['Product'],
+  },{
+    command: '\\pi',
+    example: '\\pi',
+    descriptions: ['Pi', '3.1415926535', '22/7'],
+  },{
+    command: 'e',
+    example: 'e',
+    descriptions: ['e', '2.71828'],
   },
 ]
