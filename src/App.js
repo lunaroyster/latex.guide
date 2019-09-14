@@ -43,10 +43,12 @@ class App extends Component {
       let clipboardPerms = await navigator.permissions.query({name: "clipboard-write"});
       if (clipboardPerms.state === "granted" || clipboardPerms.state === "prompt") {
         await navigator.clipboard.writeText(text);
+        window.gtag('event', 'user_copy');
       };
     } catch (e) {
       try {
         await navigator.clipboard.writeText(text);
+        window.gtag('event', 'user_copy');
       } catch (e) {console.log(e);}
       console.log(e);
     }
@@ -80,12 +82,14 @@ class App extends Component {
     let index = selectedResult+1 >= searchResult.length ? 0 : selectedResult+1;
     this.setState({selectedResult: index});
     this.scrollToResult();
+    // window.gtag('event', 'select_next');
   }
   selectPrevious = () => {
     let { selectedResult, searchResult } = this.state;
     let index = selectedResult === 0 ? searchResult.length-1 : selectedResult-1;
     this.setState({selectedResult: index});
     this.scrollToResult();
+    // window.gtag('event', 'select_previous');
   }
   keyDown = e => {
     if (e.key === 'Tab') {
