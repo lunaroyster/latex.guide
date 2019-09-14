@@ -10,11 +10,11 @@ export default [
   },{
     command: '\\geq',
     example: '\\geq',
-    descriptions: ['greater than or equal to', 'greater than equal to', '>='],
+    descriptions: ['greater than or equal to', '>='],
   },{
     command: '\\leq',
     example: '\\leq',
-    descriptions: ['less than or equal to', 'lesser than equal to', '<='],
+    descriptions: ['less than or equal to', '<='],
   },{
     command: '<',
     example: '<',
@@ -35,5 +35,13 @@ export default [
     command: '\\sqrt[n]{}',
     example: '\\sqrt[n]{a}',
     descriptions: ['nth root'],
-  },
+  },{
+    command: '^{}',
+    example: 'x^{a}',
+    descriptions: ['exponent', 'superscript', 'rasied to the power'],
+  },{
+    command: '_{}',
+    example: 'x_{a}',
+    descriptions: ['subscript'],
+  }
 ]
