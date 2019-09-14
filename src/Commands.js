@@ -219,5 +219,9 @@ export default [
     command: 'e',
     example: 'e',
     descriptions: ['e', '2.71828'],
+  },{
+    command: '!',
+    example: 'n!',
+    descriptions: ['factorial'],
   },
 ]
