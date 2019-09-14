@@ -189,12 +189,28 @@ export default [
     descriptions: ['subtract set'],
   },{
     command: '\\int_{a}^{b}',
-    example: '\\int_{a}^{b} f(s) ds',
+    example: '\\int_{a}^{b}',
     descriptions: ['definite integral'],
   },{
     command: '\\int',
-    example: '\\int f(s) ds',
-    descriptions: ['indefinite integral'],
+    example: '\\int',
+    descriptions: ['indefinite integral', 'integral'],
+  },{
+    command: '\\iint',
+    example: '\\iint',
+    descriptions: ['double integral'],
+  },{
+    command: '\\iiint',
+    example: '\\iiint',
+    descriptions: ['triple integral'],
+  },{
+    command: '\\iiiint',
+    example: '\\iiiint',
+    descriptions: ['quadruple integral'],
+  },{
+    command: '\\oint',
+    example: '\\oint',
+    descriptions: ['contour integral'],
   },{
     command: '\\overline{}',
     example: '\\overline{I}',
