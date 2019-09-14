@@ -10,7 +10,6 @@
   background-color: transparent;
   font-size: 2em;
   padding: 0.5em;
-  margin-bottom: 0.5em;
 
   box-sizing: border-box;
   width: 100%;
@@ -36,4 +35,14 @@
   background-color: #ccc;
   padding: 5px;
   border-radius: 25px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+.header img {
+  opacity: 0.6;
 }

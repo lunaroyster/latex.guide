@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import MathJax from 'react-mathjax2';
 import classNames from 'classnames';
 
-import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar } from '@material-ui/core';
+import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar, IconButton } from '@material-ui/core';
 
 import './App.css';
 
@@ -106,7 +106,10 @@ class App extends Component {
           message={<span id="message-id">Copied!</span>}
         />
         <Container>
-          <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+          <div className="header">
+            <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+            <a href="https://github.com/lunaroyster/LaTeX-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/github.svg" alt="Link to project's GitHub page" width={32} height={32} /></IconButton></a>
+          </div>
           <MathJax.Context input='tex'>
             <div>
               <Table>
