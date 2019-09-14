@@ -32,6 +32,38 @@ export default [
     example: '=',
     descriptions: ['equals', 'is equal to'],
   },{
+    command: '\\neq',
+    example: '\\neq',
+    descriptions: ['not equal to'],
+  },{
+    command: '\\approx',
+    example: '\\approx',
+    descriptions: ['approximately equal to'],
+  },{
+    command: '\\nless',
+    example: '\\nless',
+    descriptions: ['not less than'],
+  },{
+    command: '\\ngtr',
+    example: '\\ngtr',
+    descriptions: ['not greater than'],
+  },{
+    command: '\\nleq',
+    example: '\\nleq',
+    descriptions: ['not less than or equal to'],
+  },{
+    command: '\\ngeq',
+    example: '\\ngeq',
+    descriptions: ['not greater than or equal to'],
+  },{
+    command: '\\infty',
+    example: '\\infty',
+    descriptions: ['infinity'],
+  },{
+    command: '\\cdot',
+    example: '\\cdot',
+    descriptions: ['dot', 'dot product'],
+  },{
     command: '\\sqrt[n]{}',
     example: '\\sqrt[n]{a}',
     descriptions: ['nth root'],
@@ -43,5 +75,13 @@ export default [
     command: '_{}',
     example: 'x_{a}',
     descriptions: ['subscript'],
-  }
+  },{
+    command: '\\gg',
+    example: '\\gg',
+    descriptions: ['much greater than'],
+  },{
+    command: '\\ll',
+    example: '\\ll',
+    descriptions: ['much less than'],
+  },
 ]
