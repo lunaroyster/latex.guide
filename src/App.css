@@ -31,3 +31,9 @@
 .renderedlatex {
   font-size: 3em;
 }
+
+.hint {
+  background-color: #ccc;
+  padding: 5px;
+  border-radius: 25px;
+}

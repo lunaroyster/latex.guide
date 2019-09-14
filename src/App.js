@@ -129,7 +129,7 @@ class App extends Component {
                         <span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span>
                       </TableCell>
                       <TableCell colSpan={1}>
-                        {i===selectedResult && (<span>↵ to copy</span>)}
+                        {i===selectedResult && (<span className="hint">↵ to copy</span>)}
                       </TableCell>
                     </TableRow>
                   ))}
