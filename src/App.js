@@ -22,6 +22,10 @@ class App extends Component {
   }
   componentDidMount() {
     this.searchInput.current.focus();
+    document.addEventListener('keydown', this.keyDown);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keyDown);
   }
   state = {
     searchTerm: '',
@@ -68,7 +72,10 @@ class App extends Component {
     this.setState({selectedResult: index});
   }
   keyDown = e => {
-    if (e.key === 'Tab') this.selectNext();
+    if (e.key === 'Tab') {
+      (e.shiftKey ? this.selectPrevious : this.selectNext)();
+      e.preventDefault();
+    }
     if (e.key === 'ArrowDown') this.selectNext();
     if (e.key === 'ArrowUp') this.selectPrevious();
   };
@@ -76,7 +83,7 @@ class App extends Component {
     let { searchTerm, selectedResult, searchResult } = this.state;
     return (
       <div className="App">
-        <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} onKeyDown={this.keyDown} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+        <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
         <MathJax.Context input='tex'>
           <div>
             <Table>
