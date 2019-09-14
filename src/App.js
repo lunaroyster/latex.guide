@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import MathJax from 'react-mathjax2';
 import classNames from 'classnames';
 
-import { Table, TableRow, TableCell, TableBody, Container, TableHead } from '@material-ui/core';
+import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar } from '@material-ui/core';
 
 import './App.css';
 
@@ -34,6 +34,7 @@ class App extends Component {
     searchTerm: '',
     searchResult: [],
     selectedResult: 0,
+    showSnackbar: false,
   }  
   copyToClipboard = async text => {
     try {
@@ -47,6 +48,7 @@ class App extends Component {
       } catch (e) {console.log(e);}
       console.log(e);
     }
+    this.setState({showSnackbar: true});
   }  
   updateSearch = e => {
     let term = e.target.value;
@@ -91,10 +93,18 @@ class App extends Component {
     if (descriptions.length === 0) descriptions.push(item.descriptions[0])
     return descriptions;
   }
+  closeSnackbar = () => this.setState({showSnackbar: false});
   render() {
-    let { searchTerm, selectedResult, searchResult } = this.state;
+    let { searchTerm, selectedResult, searchResult, showSnackbar } = this.state;
     return (
       <div className="App">
+        <Snackbar 
+          open={showSnackbar}
+          anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+          autoHideDuration={1000}
+          onClose={this.closeSnackbar}
+          message={<span id="message-id">Copied!</span>}
+        />
         <Container>
           <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
           <MathJax.Context input='tex'>
