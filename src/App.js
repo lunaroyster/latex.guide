@@ -26,9 +26,11 @@ class App extends Component {
   componentDidMount() {
     this.searchInput.current.focus();
     document.addEventListener('keydown', this.keyDown);
+    document.addEventListener('keypress', this.pressKey);
   }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.keyDown);
+    document.removeEventListener('keypress', this.pressKey);
   }
   state = {
     searchTerm: '',
@@ -84,8 +86,14 @@ class App extends Component {
       (e.shiftKey ? this.selectPrevious : this.selectNext)();
       e.preventDefault();
     }
-    if (e.key === 'ArrowDown') this.selectNext();
-    if (e.key === 'ArrowUp') this.selectPrevious();
+    if (e.key === 'ArrowDown') {
+      this.selectNext();
+      e.preventDefault();
+    }
+    if (e.key === 'ArrowUp') {
+      this.selectPrevious();
+      e.preventDefault();
+    }
   };
   getVisibleDescriptions = (item, matches) => {
     let descriptions = [];
@@ -110,7 +118,7 @@ class App extends Component {
         />
         <Container>
           <div className="header">
-            <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+            <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
             <a href="https://github.com/lunaroyster/LaTeX-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/github.svg" alt="Link to project's GitHub page" width={32} height={32} /></IconButton></a>
           </div>
           <MathJax.Context input='tex'>
@@ -130,7 +138,7 @@ class App extends Component {
                           <div key={d}>"{d}"</div>
                         ))}
                       </TableCell>
-                      <TableCell colSpan={1} onClick={()=>this.copyToClipboard(r.command)}><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
+                      <TableCell colSpan={1} style={{cursor: 'pointer'}} onClick={()=>this.copyToClipboard(r.command)}><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
                       <TableCell colSpan={1} style={{textAlign: 'center'}}>
                         <span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span>
                       </TableCell>
