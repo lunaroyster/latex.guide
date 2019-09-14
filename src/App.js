@@ -71,15 +71,21 @@ class App extends Component {
       }
     }
   }
+  scrollToResult = () => {
+    let selectedResult = document.querySelector('.result.selected');
+    selectedResult.scrollIntoViewIfNeeded()
+  }
   selectNext = () => {
     let { selectedResult, searchResult } = this.state;
     let index = selectedResult+1 >= searchResult.length ? 0 : selectedResult+1;
     this.setState({selectedResult: index});
+    this.scrollToResult();
   }
   selectPrevious = () => {
     let { selectedResult, searchResult } = this.state;
     let index = selectedResult === 0 ? searchResult.length-1 : selectedResult-1;
     this.setState({selectedResult: index});
+    this.scrollToResult();
   }
   keyDown = e => {
     if (e.key === 'Tab') {
