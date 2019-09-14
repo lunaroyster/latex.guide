@@ -88,6 +88,7 @@ class App extends Component {
       if (m.key !== 'descriptions') continue;
       descriptions.push(item.descriptions[m.arrayIndex]);
     }
+    if (descriptions.length === 0) descriptions.push(item.descriptions[0])
     return descriptions;
   }
   render() {
@@ -100,10 +101,10 @@ class App extends Component {
             <div>
               <Table>
                 <colgroup>
-                  <col style={{width:'25%'}}/>
-                  <col style={{width:'25%'}}/>
-                  <col style={{width:'25%'}}/>
-                  <col style={{width:'25%'}}/>
+                  <col style={{width:'30%'}}/>
+                  <col style={{width:'30%'}}/>
+                  <col style={{width:'30%'}}/>
+                  <col style={{width:'10%'}}/>
                 </colgroup>
                 <TableBody>
                   {searchResult.map(({item: r, matches}, i) => (
@@ -114,7 +115,9 @@ class App extends Component {
                         ))}
                       </TableCell>
                       <TableCell colSpan={1}><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
-                      <TableCell colSpan={1}><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
+                      <TableCell colSpan={1} style={{textAlign: 'center'}}>
+                        <span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span>
+                      </TableCell>
                       <TableCell colSpan={1}>
                         {i===selectedResult && (<span>↵ to copy</span>)}
                       </TableCell>
