@@ -8,11 +8,14 @@
   border-left: 4px solid #888;
   color: #888;
   background-color: transparent;
-  font-size: 2em;
+  font-size: 1.25em;
   padding: 0.5em;
 
   box-sizing: border-box;
   width: 100%;
+  @media (min-width: 768px) {
+    font-size: 2em;
+  }
 }
 
 #searchBox::placeholder {

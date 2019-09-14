@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar, IconButton } from '@material-ui/core';
 
-import './App.css';
+import './App.scss';
 
 import Commands from './Commands';
 
