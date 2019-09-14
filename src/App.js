@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import MathJax from 'react-mathjax2';
 import classNames from 'classnames';
 
-import { Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { Table, TableRow, TableCell, TableBody, Container } from '@material-ui/core';
 
 import './App.css';
 
@@ -83,22 +83,27 @@ class App extends Component {
     let { searchTerm, selectedResult, searchResult } = this.state;
     return (
       <div className="App">
-        <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
-        <MathJax.Context input='tex'>
-          <div>
-            <Table>
-              <TableBody>
-                {searchResult.map((r,i) => (
-                  <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1}>
-                    <TableCell>{r.descriptions[0]}</TableCell>
-                    <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
-                    <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </MathJax.Context>
+        <Container>
+          <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} onKeyPress={this.pressKey} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+          <MathJax.Context input='tex'>
+            <div>
+              <Table>
+                <TableBody>
+                  {searchResult.map((r,i) => (
+                    <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1}>
+                      <TableCell>{r.descriptions[0]}</TableCell>
+                      <TableCell><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
+                      <TableCell><span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span></TableCell>
+                      <TableCell>
+                        {i===selectedResult && (<span>↵ to copy</span>)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </MathJax.Context>
+        </Container>
       </div>
     );
   }
