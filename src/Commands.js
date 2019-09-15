@@ -265,7 +265,7 @@ const greekAlphabet = [
   {command: '\\mu', example: '\\mu', descriptions: ['Mu']},
   {command: '\\nu', example: '\\nu', descriptions: ['Nu']},
   {command: '\\omicron', example: '\\omicron', descriptions: ['Omicron']},
-  {command: '\\pi', example: '\\pi', descriptions: ['Pi']},
+  // Pi in CommandList
   {command: '\\rho', example: '\\rho', descriptions: ['Rho']},
   {command: '\\sigma', example: '\\sigma', descriptions: ['Sigma']},
   {command: '\\tau', example: '\\tau', descriptions: ['Tau']},
