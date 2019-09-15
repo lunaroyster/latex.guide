@@ -247,6 +247,14 @@ const CommandList = [
     command: '\\exists',
     example: '\\exists',
     descriptions: ['exists', 'existential quantifier'],
+  },{
+    command: '\\hat{}',
+    example: '\\hat{a}',
+    descriptions: ['hat'],
+  },{
+    command: '\\widehat{}',
+    example: '\\widehat{abc}',
+    descriptions: ['widehat'],
   },
 ]
 
