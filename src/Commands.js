@@ -126,11 +126,11 @@ export default [
   },{
     command: '\\implies',
     example: 'P \\implies Q',
-    descriptions: ['Implies', 'If P, then Q'],
+    descriptions: ['Implies', 'If P then Q', 'Material Implication', 'Conditional'],
   },{
     command: '\\iff',
     example: 'P \\iff Q',
-    descriptions: ['If and only if', 'Implication'],
+    descriptions: ['iff', 'If and only if', 'Material Equivalence'],
   },{
     command: '\\sin{}',
     example: '\\sin{x}',
