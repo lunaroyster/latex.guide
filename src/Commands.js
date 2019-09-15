@@ -1,4 +1,4 @@
-export default [
+const CommandList = [
   {
     command: '\\frac{}{}',
     example: '\\frac{a}{b}',
@@ -247,5 +247,33 @@ export default [
     command: '\\exists',
     example: '\\exists',
     descriptions: ['exists', 'existential quantifier'],
-  }
+  },
 ]
+
+const greekAlphabet = [
+  {command: '\\alpha', example: '\\alpha', descriptions: ['Alpha']},
+  {command: '\\beta', example: '\\beta', descriptions: ['Beta']},
+  {command: '\\gamma', example: '\\gamma', descriptions: ['Gamma']},
+  {command: '\\delta', example: '\\delta', descriptions: ['Delta']},
+  {command: '\\epsilon', example: '\\epsilon', descriptions: ['Epsilon']},
+  {command: '\\zeta', example: '\\zeta', descriptions: ['Zeta']},
+  {command: '\\eta', example: '\\eta', descriptions: ['Eta']},
+  {command: '\\theta', example: '\\theta', descriptions: ['Theta']},
+  {command: '\\iota', example: '\\iota', descriptions: ['Iota']},
+  {command: '\\kappa', example: '\\kappa', descriptions: ['Kappa']},
+  {command: '\\lambda', example: '\\lambda', descriptions: ['Lambda']},
+  {command: '\\mu', example: '\\mu', descriptions: ['Mu']},
+  {command: '\\nu', example: '\\nu', descriptions: ['Nu']},
+  {command: '\\omicron', example: '\\omicron', descriptions: ['Omicron']},
+  {command: '\\pi', example: '\\pi', descriptions: ['Pi']},
+  {command: '\\rho', example: '\\rho', descriptions: ['Rho']},
+  {command: '\\sigma', example: '\\sigma', descriptions: ['Sigma']},
+  {command: '\\tau', example: '\\tau', descriptions: ['Tau']},
+  {command: '\\upsilon', example: '\\upsilon', descriptions: ['Upsilon']},
+  {command: '\\phi', example: '\\phi', descriptions: ['Phi']},
+  {command: '\\chi', example: '\\chi', descriptions: ['Chi']},
+  {command: '\\psi', example: '\\psi', descriptions: ['Psi']},
+  {command: '\\omega', example: '\\omega', descriptions: ['Omega']},
+];
+
+export default [...CommandList, ...greekAlphabet];
