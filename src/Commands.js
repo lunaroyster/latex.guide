@@ -259,6 +259,10 @@ const CommandList = [
     commnad: '\\nabla',
     example: '\\nabla',
     descriptions: ['nabla', 'differential'],
+  },{
+    command: '\\times',
+    example: '\\times',
+    descriptions: ['cross', 'cross product', 'multiply']
   }
 ]
 
