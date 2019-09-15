@@ -262,8 +262,12 @@ const CommandList = [
   },{
     command: '\\times',
     example: '\\times',
-    descriptions: ['cross', 'cross product', 'multiply']
-  }
+    descriptions: ['cross', 'cross product', 'multiply', 'x'],
+  },{
+    command: '\\div',
+    example: '\\div',
+    descriptions: ['divide', 'division', '/'],
+  },
 ]
 
 const greekAlphabet = [
