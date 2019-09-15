@@ -246,6 +246,6 @@ export default [
   },{
     command: '\\exists',
     example: '\\exists',
-    description: ['exists', 'existential quantifier'],
+    descriptions: ['exists', 'existential quantifier'],
   }
 ]
