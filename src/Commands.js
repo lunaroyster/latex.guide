@@ -239,5 +239,13 @@ export default [
     command: '!',
     example: 'n!',
     descriptions: ['factorial'],
-  },
+  },{
+    command: '\\forall',
+    example: '\\forall',
+    descriptions: ['for all', 'given any', 'universal quantifier']
+  },{
+    command: '\\exists',
+    example: '\\exists',
+    description: ['exists', 'existential quantifier'],
+  }
 ]
