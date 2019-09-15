@@ -255,14 +255,19 @@ const CommandList = [
     command: '\\widehat{}',
     example: '\\widehat{abc}',
     descriptions: ['widehat'],
-  },
+  },{
+    commnad: '\\nabla',
+    example: '\\nabla',
+    descriptions: ['nabla', 'differential'],
+  }
 ]
 
 const greekAlphabet = [
   {command: '\\alpha', example: '\\alpha', descriptions: ['Alpha']},
   {command: '\\beta', example: '\\beta', descriptions: ['Beta']},
   {command: '\\gamma', example: '\\gamma', descriptions: ['Gamma']},
-  {command: '\\delta', example: '\\delta', descriptions: ['Delta']},
+  {command: '\\delta', example: '\\delta', descriptions: ['delta']},
+  {command: '\\Delta', example: '\\Delta', descriptions: ['Delta']},
   {command: '\\epsilon', example: '\\epsilon', descriptions: ['Epsilon']},
   {command: '\\zeta', example: '\\zeta', descriptions: ['Zeta']},
   {command: '\\eta', example: '\\eta', descriptions: ['Eta']},
