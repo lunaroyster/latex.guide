@@ -162,7 +162,7 @@ const CommandList = [
   },{
     command: '\\ni',
     example: 'A \\ni a',
-    descriptions: ['owns', 'has member'],
+    descriptions: ['owns', 'has member', 'reverse in'],
   },{
     command: '\\notin',
     example: 'a \\notin A',
@@ -171,6 +171,14 @@ const CommandList = [
     command: '\\subset',
     example: 'a \\subset A',
     descriptions: ['is subset of', 'proper subset'],
+  },{
+    command: '\\supset',
+    example: 'A \\supset a',
+    descriptions: ['is superset of', 'proper superset'],
+  },{
+    command: '\\supseteq',
+    example: 'A \\supseteq a',
+    descriptions: ['is superset of', 'improper superset'],
   },{
     command: '\\not\\subset',
     example: 'a \\not\\subset A',
@@ -267,7 +275,19 @@ const CommandList = [
     command: '\\div',
     example: '\\div',
     descriptions: ['divide', 'division', '/'],
-  },
+  },{
+    command: '\\cap',
+    example: '\\cap',
+    descriptions: ['intersection', 'set intersection'],
+  },{
+    command: '\\cup',
+    example: '\\cup',
+    descriptions: ['union', 'set union'],
+  },{
+    command: '\\emptyset',
+    example: '\\emptyset',
+    descriptions: ['null set', 'empty set'],
+  }
 ]
 
 const greekAlphabet = [
