@@ -161,7 +161,9 @@ class App extends Component {
               </Table>
             </div>
           </MathJax.Context>
-          {searchResult.length === 0 && <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer" id="producthunt"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={32} height={32} /></IconButton>Live on ProductHunt</a>}
+          {searchResult.length === 0 && (
+            <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer" id="producthunt"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={32} height={32} /></IconButton></a>
+          )}
         </Container>
       </div>
     );
