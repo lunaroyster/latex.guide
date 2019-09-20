@@ -1,7 +1,7 @@
 # These rules will change if you change your site’s custom domains or HTTPS settings
 
 # Redirect domain aliases to primary domain
-https://latexsearch.arnavbansal.dev/* https://latex.guide/:splat 301!
+# https://latexsearch.arnavbansal.dev/* https://latex.guide/:splat 301!
 
 # Optional: Redirect default Netlify subdomain to primary domain
-https://latexsearch.netlify.com/* https://latex.guide/:splat 301!
+# https://latexsearch.netlify.com/* https://latex.guide/:splat 301!
