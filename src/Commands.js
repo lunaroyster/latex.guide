@@ -254,7 +254,15 @@ const CommandList = [
   },{
     command: '\\exists',
     example: '\\exists',
-    descriptions: ['exists', 'existential quantifier'],
+    descriptions: ['there exists', 'existential quantifier'],
+  },{
+    command: '\\nexists',
+    example: '\\nexists',
+    descriptions: ['there is no', 'there does not exist'],
+  },{
+    command: '\\exists!',
+    example: '\\exists!',
+    descriptions: ['there exists one and only one'],
   },{
     command: '\\hat{}',
     example: '\\hat{a}',
