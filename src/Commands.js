@@ -295,7 +295,51 @@ const CommandList = [
     command: '\\emptyset',
     example: '\\emptyset',
     descriptions: ['null set', 'empty set'],
-  }
+  },{
+    command: '\\triangle',
+    example: '\\triangle',
+    descriptions: ['triangle'],
+  },{
+    command: '\\angle',
+    example: '\\angle',
+    descriptions: ['angle'],
+  },{
+    command: '\\cong',
+    example: '\\cong',
+    descriptions: ['congruent'],
+  },{
+    command: '\\ncong',
+    example: '\\ncong',
+    descriptions: ['not congruent'],
+  },{
+    command: '\\sim',
+    example: '\\sim',
+    descriptions: ['similar'],
+  },{
+    command: '\\nsim',
+    example: '\\nsim',
+    descriptions: ['not similar'],
+  },{
+    command: '\\|',
+    example: '\\|',
+    descriptions: ['parallel'],
+  },{
+    command: '\\nparallel',
+    example: '\\nparallel',
+    descriptions: ['not parallel'],
+  },{
+    command: '\\perp',
+    example: '\\perp',
+    descriptions: ['perpendicular'],
+  },{
+    command: '\\not\\perp',
+    example: '\\not\\perp',
+    descriptions: ['not perpendicular'],
+  },{
+    command: '\\overrightarrow{}',
+    example: '\\overrightarrow{AB}',
+    descriptions: ['ray', 'half-line'],
+  },
 ]
 
 const greekAlphabet = [
