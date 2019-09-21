@@ -38,7 +38,20 @@ class App extends Component {
     selectedResult: 0,
     showSnackbar: false,
     showMissingPrompt: false,
-  }  
+  }
+  suggestMissing = async () => {
+    try {
+      await window.fetch('https://us-central1-random-arts.cloudfunctions.net/api/latexguide/missingsymbol', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          suggestion: this.state.searchTerm,
+        }),
+      });
+    } catch (e) {}
+  }
   copyToClipboard = async text => {
     try {
       let clipboardPerms = await navigator.permissions.query({name: "clipboard-write"});
@@ -131,7 +144,7 @@ class App extends Component {
         <Container>
           <div className="header">
             <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
-            {showMissingPrompt && <div id="missingSymbol">Missing Symbol?</div>}
+            {showMissingPrompt && <div id="missingSymbol" onClick={this.suggestMissing}>Missing Symbol?</div>}
             <a href="https://github.com/lunaroyster/LaTeX-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/github.svg" alt="Link to project's GitHub page" width={32} height={32} /></IconButton></a>
           </div>
           <MathJax.Context input='tex'>
