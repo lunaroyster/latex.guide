@@ -37,6 +37,7 @@ class App extends Component {
     searchResult: [],
     selectedResult: 0,
     showSnackbar: false,
+    showMissingPrompt: false,
   }  
   copyToClipboard = async text => {
     try {
@@ -61,6 +62,7 @@ class App extends Component {
       searchTerm: term,
       searchResult: results,
       selectedResult: 0,
+      showMissingPrompt: term.length > 2,
     });
   }
   clickResult = index => {
@@ -116,7 +118,7 @@ class App extends Component {
   }
   closeSnackbar = () => this.setState({showSnackbar: false});
   render() {
-    let { searchTerm, selectedResult, searchResult, showSnackbar } = this.state;
+    let { searchTerm, selectedResult, searchResult, showSnackbar, showMissingPrompt } = this.state;
     return (
       <div className="App">
         <Snackbar 
@@ -129,6 +131,7 @@ class App extends Component {
         <Container>
           <div className="header">
             <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+            {showMissingPrompt && <div id="missingSymbol">Missing Symbol?</div>}
             <a href="https://github.com/lunaroyster/LaTeX-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/github.svg" alt="Link to project's GitHub page" width={32} height={32} /></IconButton></a>
           </div>
           <MathJax.Context input='tex'>

@@ -51,6 +51,14 @@
   display: flex;
   align-items: center;
   margin-bottom: 0.5em;
+  #missingSymbol {
+    white-space: nowrap;
+    padding: 1em;
+    color: #888;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 0.75em;
+  }
 }
 
 .header img {
