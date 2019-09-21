@@ -162,7 +162,10 @@ class App extends Component {
             </div>
           </MathJax.Context>
           {searchResult.length === 0 && (
-            <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer" id="producthunt"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={32} height={32} /></IconButton></a>
+            <div id="bottomBar">
+              <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
+              <a href="https://twitter.com/@itsarnavb" target="_blank" rel="noopener noreferrer"><IconButton><img src="/twitter.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
+            </div>
           )}
         </Container>
       </div>

@@ -57,12 +57,12 @@
   opacity: 0.6;
 }
 
-#producthunt {
+#bottomBar, #producthunt {
   text-decoration: none;
   color: unset;
 
   position: absolute;
   bottom: 1em;
-  left: 1em;
+  right: 1em;
   opacity: 0.6;
 }
