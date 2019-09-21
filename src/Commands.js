@@ -339,7 +339,11 @@ const CommandList = [
     command: '\\overrightarrow{}',
     example: '\\overrightarrow{AB}',
     descriptions: ['ray', 'half-line'],
-  },
+  },{
+    command: '\\%',
+    example: '\\%',
+    descriptions: ['tax', 'money'],
+  }
 ]
 
 const greekAlphabet = [
