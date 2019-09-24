@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import MathJax from 'react-mathjax2';
 import classNames from 'classnames';
 
-import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar, IconButton } from '@material-ui/core';
+import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar, IconButton, CircularProgress } from '@material-ui/core';
 
 import './App.scss';
 
@@ -15,6 +15,12 @@ const searchConfig = {
   includeMatches: true,
   shouldSort: true,
   minMatchCharLength: 2,
+};
+
+const promptStates = {
+  HIDDEN: 0,
+  READY: 1,
+  LOADING: 2,
 };
 
 class App extends Component {
@@ -36,8 +42,24 @@ class App extends Component {
     searchTerm: '',
     searchResult: [],
     selectedResult: 0,
-    showSnackbar: false,
-  }  
+    snackBarMessage: '',
+    missingPromptState: promptStates.HIDDEN,
+  }
+  suggestMissing = async () => {
+    try {
+      this.setState({missingPromptState: promptStates.LOADING});
+      await window.fetch('https://us-central1-random-arts.cloudfunctions.net/api/latexguide/missingsymbol', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          suggestion: this.state.searchTerm,
+        }),
+      });
+      this.setState({missingPromptState: promptStates.HIDDEN, snackBarMessage: `Suggested: ${this.state.searchTerm}`});
+    } catch (e) {}
+  }
   copyToClipboard = async text => {
     try {
       let clipboardPerms = await navigator.permissions.query({name: "clipboard-write"});
@@ -52,7 +74,7 @@ class App extends Component {
       } catch (e) {console.log(e);}
       console.log(e);
     }
-    this.setState({showSnackbar: true});
+    this.setState({snackBarMessage: 'Copied!'});
   }  
   updateSearch = e => {
     let term = e.target.value;
@@ -61,6 +83,7 @@ class App extends Component {
       searchTerm: term,
       searchResult: results,
       selectedResult: 0,
+      missingPromptState: term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
     });
   }
   clickResult = index => {
@@ -114,21 +137,23 @@ class App extends Component {
     if (descriptions.length === 0) descriptions.push(item.descriptions[0])
     return descriptions;
   }
-  closeSnackbar = () => this.setState({showSnackbar: false});
+  closeSnackbar = () => this.setState({snackBarMessage: ''});
   render() {
-    let { searchTerm, selectedResult, searchResult, showSnackbar } = this.state;
+    let { searchTerm, selectedResult, searchResult, snackBarMessage, missingPromptState } = this.state;
     return (
       <div className="App">
         <Snackbar 
-          open={showSnackbar}
+          open={snackBarMessage.length > 0}
           anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
           autoHideDuration={1000}
           onClose={this.closeSnackbar}
-          message={<span id="message-id">Copied!</span>}
+          message={<span id="message-id">{snackBarMessage}</span>}
         />
         <Container>
           <div className="header">
             <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
+            {missingPromptState === promptStates.READY && <div id="missingSymbol" onClick={this.suggestMissing}>Missing Symbol?</div>}
+            {missingPromptState === promptStates.LOADING && <div><CircularProgress /></div>}
             <a href="https://github.com/lunaroyster/LaTeX-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/github.svg" alt="Link to project's GitHub page" width={32} height={32} /></IconButton></a>
           </div>
           <MathJax.Context input='tex'>
@@ -162,7 +187,10 @@ class App extends Component {
             </div>
           </MathJax.Context>
           {searchResult.length === 0 && (
-            <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer" id="producthunt"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={32} height={32} /></IconButton></a>
+            <div id="bottomBar">
+              <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
+              <a href="https://twitter.com/@itsarnavb" target="_blank" rel="noopener noreferrer"><IconButton><img src="/twitter.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
+            </div>
           )}
         </Container>
       </div>

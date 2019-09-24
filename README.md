@@ -1,4 +1,4 @@
-# LaTeX Search
+# [LaTeX Search](https://github.com/lunaroyster/LaTeX-search/blob/master/README.md)
 
 ## Goals:
 

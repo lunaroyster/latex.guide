@@ -342,7 +342,7 @@ const CommandList = [
   },{
     command: '\\%',
     example: '\\%',
-    descriptions: ['tax', 'money'],
+    descriptions: ['percentage', '%'],
   }
 ]
 
