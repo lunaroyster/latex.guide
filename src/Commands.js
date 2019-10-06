@@ -343,6 +343,18 @@ const CommandList = [
     command: '\\%',
     example: '\\%',
     descriptions: ['percentage', '%'],
+  }, {
+    command: '\\tilde',
+    example: '\\~{o}',
+    description: ['tilde', '~'],
+  }, {
+    command: '\\textit',
+    example: '\\textit{accident}',
+    description: ['italics', 'textit', 'italicize'],
+  }, {
+    command: '\\hspace',
+    example: '\\hspace{1in}',
+    description: ['empty space', 'hspace'],
   }
 ]
 
