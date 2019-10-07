@@ -345,8 +345,8 @@ const CommandList = [
     descriptions: ['percentage', '%'],
   },
   {
-    command: '\\text{}',
-    example: '\\text{Text within equation}',
+    command: '\\textrm{}',
+    example: '\\textrm{Text within equation}',
     descriptions: ['text', 'text within equation','descriptions'],
   },
   {
@@ -393,7 +393,50 @@ const CommandList = [
     command: '\\vdots',
     example: '\\vdots',
     descriptions: ['dots','...','down','vertical'],
-  }
+  },
+   {
+    command: `\\begin{bmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{bmatrix}`,
+    example: `\\begin{bmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{bmatrix}`,
+    descriptions: ['bmatrix','matrix','list','array'],
+  },
+   {
+    command: `\\begin{pmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{pmatrix}`,
+    example: `\\begin{pmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{pmatrix}`,
+    descriptions: ['pmatrix','matrix','list','array'],
+  },
+  {
+    command: '\\lfoor {} \rfloor',
+    example: '\\lfoor {\frac{a}{b}} \rfloor',
+    descriptions: ['round','floor','down','reduce'],
+  },
+    {
+    command: '\\lciel {} \rciel',
+    example: '\\lciel {\frac{a}{b}} \rciel',
+    descriptions: ['round','floor','down','reduce'],
+  },
+   {
+    command: `f(n) = \left\{\begin{array}{cl}
+              {} & \textrm{if } {}\\
+              {} & \textrm{if } {}\\
+              {} &\textrm{if } {}
+              \end{array}
+              \right. %empty place holder right brace`,
+    example: `f(n) = \left\\begin{array}{cl}
+                0 & \textrm{if } n = 0\\
+                1 & \textrm{if } n = 1\\
+                f(n-1) + f(n-2) &\textrm{if } n\geq 2
+                \end{array}
+                 \right. %empty place holder right brace`,
+    descriptions: ['compound function','function','piecewise functions'],
+  },
 ]
 
 const greekAlphabet = [
