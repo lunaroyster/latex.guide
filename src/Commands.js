@@ -343,6 +343,11 @@ const CommandList = [
     command: '\\%',
     example: '\\%',
     descriptions: ['percentage', '%'],
+  },
+  {
+    command: '\\text{}',
+    example: '\\text{Text within equation}',
+    descriptions: ['text', 'text within equation','descriptions'],
   }
 ]
 
