@@ -348,6 +348,51 @@ const CommandList = [
     command: '\\text{}',
     example: '\\text{Text within equation}',
     descriptions: ['text', 'text within equation','descriptions'],
+  },
+  {
+    command: '\ {} \bmod{}',
+    example: '\ a \bmod b',
+    descriptions: ['mod', 'remainder','bmod'],
+  },
+    {
+    command: '\ {} \pmod{}',
+    example: '\ a \pmod b',
+    descriptions: ['mod', 'remainder','pmod'],
+  },
+    {
+    command: '\\equiv',
+    example: '\\equiv',
+    descriptions: ['equals', 'equivalent'],
+  },
+   {
+    command: '\\partial',
+    example: '\\partial',
+    descriptions: ['partial derivative', 'derivative'],
+  },
+  {
+    command: '\\vec{}',
+    example: '\\vec{a}',
+    descriptions: ['vector'],
+  },
+   {
+    command: '\\underbrace{}_{}',
+    example: '\\underbrace{a+b+c}_{a sum}',
+    descriptions: ['underbrace'],
+  },
+  {
+    command: '\\overbrace{}_{}',
+    example: '\\overbrace{a+b+c}_{a sum}',
+    descriptions: ['overbrace'],
+  },
+  {
+    command: '\\ldots',
+    example: '\\ldots',
+    descriptions: ['dots','...','left','horizontal'],
+  },
+   {
+    command: '\\vdots',
+    example: '\\vdots',
+    descriptions: ['dots','...','down','vertical'],
   }
 ]
 
