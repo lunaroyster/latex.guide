@@ -314,7 +314,7 @@ const CommandList = [
   },{
     command: '\\sim',
     example: '\\sim',
-    descriptions: ['similar'],
+    descriptions: ['similar', 'tilde'],
   },{
     command: '\\nsim',
     example: '\\nsim',
@@ -343,6 +343,14 @@ const CommandList = [
     command: '\\%',
     example: '\\%',
     descriptions: ['percentage', '%'],
+  }, {
+    command: '\\textit{}',
+    example: '\\textit{italics}',
+    descriptions: ['italics', 'textit', 'italicize'],
+  }, {
+    command: '\\hspace{1in}',
+    example: '\\hspace{1in}',
+    descriptions: ['empty space', 'hspace'],
   }
 ]
 
