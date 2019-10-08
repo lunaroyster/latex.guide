@@ -352,6 +352,100 @@ const CommandList = [
     example: '\\hspace{1in}',
     descriptions: ['empty space', 'hspace'],
   }
+  },
+  {
+    command: '\\textrm{}',
+    example: '\\textrm{Text within equation}',
+    descriptions: ['text', 'text within equation','descriptions'],
+  },
+  {
+    command: '\ {} \bmod{}',
+    example: '\ a \bmod b',
+    descriptions: ['mod', 'remainder','bmod'],
+  },
+    {
+    command: '\ {} \pmod{}',
+    example: '\ a \pmod b',
+    descriptions: ['mod', 'remainder','pmod'],
+  },
+    {
+    command: '\\equiv',
+    example: '\\equiv',
+    descriptions: ['equals', 'equivalent'],
+  },
+   {
+    command: '\\partial',
+    example: '\\partial',
+    descriptions: ['partial derivative', 'derivative'],
+  },
+  {
+    command: '\\vec{}',
+    example: '\\vec{a}',
+    descriptions: ['vector'],
+  },
+   {
+    command: '\\underbrace{}_{}',
+    example: '\\underbrace{a+b+c}_{a sum}',
+    descriptions: ['underbrace'],
+  },
+  {
+    command: '\\overbrace{}_{}',
+    example: '\\overbrace{a+b+c}_{a sum}',
+    descriptions: ['overbrace'],
+  },
+  {
+    command: '\\ldots',
+    example: '\\ldots',
+    descriptions: ['dots','...','left','horizontal'],
+  },
+   {
+    command: '\\vdots',
+    example: '\\vdots',
+    descriptions: ['dots','...','down','vertical'],
+  },
+   {
+    command: `\\begin{bmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{bmatrix}`,
+    example: `\\begin{bmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{bmatrix}`,
+    descriptions: ['bmatrix','matrix','list','array'],
+  },
+   {
+    command: `\\begin{pmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{pmatrix}`,
+    example: `\\begin{pmatrix} a_{11} & a_{12} & \ldots \\
+a_{21} & a_{22} & \ldots\\
+\vdots & \vdots & \ddots \end{pmatrix}`,
+    descriptions: ['pmatrix','matrix','list','array'],
+  },
+  {
+    command: '\\lfoor {} \rfloor',
+    example: '\\lfoor {\frac{a}{b}} \rfloor',
+    descriptions: ['round','floor','down','reduce'],
+  },
+    {
+    command: '\\lciel {} \rciel',
+    example: '\\lciel {\frac{a}{b}} \rciel',
+    descriptions: ['round','floor','down','reduce'],
+  },
+   {
+    command: `f(n) = \left\{\begin{array}{cl}
+              {} & \textrm{if } {}\\
+              {} & \textrm{if } {}\\
+              {} &\textrm{if } {}
+              \end{array}
+              \right. %empty place holder right brace`,
+    example: `f(n) = \left\\begin{array}{cl}
+                0 & \textrm{if } n = 0\\
+                1 & \textrm{if } n = 1\\
+                f(n-1) + f(n-2) &\textrm{if } n\geq 2
+                \end{array}
+                 \right. %empty place holder right brace`,
+    descriptions: ['compound function','function','piecewise functions'],
+  },
 ]
 
 const greekAlphabet = [
