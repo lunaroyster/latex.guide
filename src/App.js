@@ -55,11 +55,7 @@ class App extends Component {
     let callback = r => {
       let entry = r[0];
       if (entry.isIntersecting) {
-        if (this.state.searchResult.length > this.state.visibleCount) {
-          this.setState({
-            visibleCount: this.state.visibleCount + 5,
-          })
-        }
+        this.loadMoreResults();
       }
     }
     let observer = new IntersectionObserver(callback, {
@@ -79,6 +75,13 @@ class App extends Component {
     snackBarMessage: '',
     missingPromptState: promptStates.HIDDEN,
     visibleCount: 15,
+  }
+  loadMoreResults = () => {
+    if (this.state.searchResult.length > this.state.visibleCount) {
+      this.setState({
+        visibleCount: this.state.visibleCount + 5,
+      })
+    }
   }
   suggestMissing = async () => {
     try {
@@ -223,7 +226,7 @@ class App extends Component {
           )}
           <div id="loadMoreGutter">
             {searchResult.length > visibleCount && (
-              <CircularProgress />
+              <CircularProgress onClick={this.loadMoreResults} />
             )}
           </div>
         </Container>

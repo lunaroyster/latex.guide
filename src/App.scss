@@ -74,3 +74,14 @@
   right: 1em;
   opacity: 0.6;
 }
+
+#loadMoreGutter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2em;
+}
+
+.MuiCircularProgress-colorPrimary {
+  color: #888888 !important;
+}
