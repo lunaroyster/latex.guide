@@ -2,6 +2,9 @@ import React, { Component, createRef } from 'react';
 import MathJax from 'react-mathjax2';
 import classNames from 'classnames';
 
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar, IconButton, CircularProgress } from '@material-ui/core';
 
 import './App.scss';
@@ -28,6 +31,21 @@ class App extends Component {
     super(props);
     this.searchInput = createRef();
     this.latexSearch = new Fuse(Commands, searchConfig);
+    this.searchTermChange = new Subject();
+    this.searchTermChange.subscribe(e => {
+      let term = e.target.value;
+      this.setState({searchTerm: term});
+    });
+    this.searchTermChange.pipe(debounceTime(150)).subscribe(e => {
+      let term = this.state.searchTerm;
+      let results = term.length === 0 ? [] : this.latexSearch.search(term);
+      this.setState({
+        searchResult: results,
+        selectedResult: 0,
+        missingPromptState: term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
+        visibleCount: 15,
+      });
+    });
   }
   componentDidMount() {
     this.searchInput.current.focus();
@@ -94,17 +112,7 @@ class App extends Component {
     this.setState({snackBarMessage: 'Copied!'});
   }
   updateSearch = e => {
-    let term = e.target.value;
-    this.setState({searchTerm: term});
-    setTimeout(()=>{
-      let results = this.latexSearch.search(term);
-      this.setState({
-        searchResult: results,
-        selectedResult: 0,
-        missingPromptState: term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
-        visibleCount: 15,
-      });
-    }, 1)
+    this.searchTermChange.next(e);
   }
   clickResult = index => {
     this.setState({selectedResult: index});
