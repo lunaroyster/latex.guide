@@ -421,14 +421,14 @@ const CommandList = [
 //     descriptions: ['pmatrix','matrix','list','array'],
 //   },
   {
-    command: '\\lfoor {} \rfloor',
-    example: '\\lfoor {\frac{a}{b}} \rfloor',
-    descriptions: ['round','floor','down','reduce'],
+    command: '\\lfloor {} \\rfloor',
+    example: '\\lfloor {\\frac{a}{b}} \\rfloor',
+    descriptions: ['round down','floor'],
   },
     {
-    command: '\\lciel {} \rciel',
-    example: '\\lciel {\frac{a}{b}} \rciel',
-    descriptions: ['round','floor','down','reduce'],
+    command: '\\lceil {} \\rceil',
+    example: '\\lceil {\\frac{a}{b}} \\rceil',
+    descriptions: ['round up','ceil'],
   },
   // {
   //   command: `f(n) = \left\{\begin{array}{cl}
