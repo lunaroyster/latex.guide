@@ -33,6 +33,22 @@ class App extends Component {
     this.searchInput.current.focus();
     document.addEventListener('keydown', this.keyDown);
     document.addEventListener('keypress', this.pressKey);
+
+    let callback = r => {
+      let entry = r[0];
+      if (entry.isIntersecting) {
+        if (this.state.searchResult.length > this.state.visibleCount) {
+          this.setState({
+            visibleCount: this.state.visibleCount + 5,
+          })
+        }
+      }
+    }
+    let observer = new IntersectionObserver(callback, {
+      rootMargin: '0px',
+      threshold: 0.1
+    });
+    observer.observe(document.querySelector('#loadMoreGutter'));
   }
   componentWillUnmount() {
     document.removeEventListener('keydown', this.keyDown);
@@ -44,6 +60,7 @@ class App extends Component {
     selectedResult: 0,
     snackBarMessage: '',
     missingPromptState: promptStates.HIDDEN,
+    visibleCount: 15,
   }
   suggestMissing = async () => {
     try {
@@ -75,16 +92,19 @@ class App extends Component {
       console.log(e);
     }
     this.setState({snackBarMessage: 'Copied!'});
-  }  
+  }
   updateSearch = e => {
     let term = e.target.value;
-    let results = this.latexSearch.search(term);
-    this.setState({
-      searchTerm: term,
-      searchResult: results,
-      selectedResult: 0,
-      missingPromptState: term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
-    });
+    this.setState({searchTerm: term});
+    setTimeout(()=>{
+      let results = this.latexSearch.search(term);
+      this.setState({
+        searchResult: results,
+        selectedResult: 0,
+        missingPromptState: term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
+        visibleCount: 15,
+      });
+    }, 1)
   }
   clickResult = index => {
     this.setState({selectedResult: index});
@@ -139,7 +159,8 @@ class App extends Component {
   }
   closeSnackbar = () => this.setState({snackBarMessage: ''});
   render() {
-    let { searchTerm, selectedResult, searchResult, snackBarMessage, missingPromptState } = this.state;
+    let { searchTerm, selectedResult, searchResult, snackBarMessage, missingPromptState, visibleCount } = this.state;
+    let visibleResults = searchResult.slice(0, visibleCount);
     return (
       <div className="App">
         <Snackbar 
@@ -166,7 +187,7 @@ class App extends Component {
                   <col style={{width:'10%'}}/>
                 </colgroup>
                 <TableBody>
-                  {searchResult.map(({item: r, matches}, i) => (
+                  {visibleResults.map(({item: r, matches}, i) => (
                     <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1} onClick={() => this.clickResult(i)}>
                       <TableCell colSpan={1}>
                         {this.getVisibleDescriptions(r, matches).map(d => (
@@ -192,6 +213,11 @@ class App extends Component {
               <a href="https://twitter.com/@itsarnavb" target="_blank" rel="noopener noreferrer"><IconButton><img src="/twitter.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
             </div>
           )}
+          <div id="loadMoreGutter">
+            {searchResult.length > visibleCount && (
+              <CircularProgress />
+            )}
+          </div>
         </Container>
       </div>
     );
