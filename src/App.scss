@@ -40,11 +40,15 @@
 .renderedlatex {
   font-size: 2em;
 }
+code {
+  white-space: pre-line;
+}
 
 .hint {
   background-color: #ccc;
   padding: 5px;
   border-radius: 25px;
+  white-space: nowrap;
 }
 
 .header {

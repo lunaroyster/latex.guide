@@ -26,6 +26,20 @@ const promptStates = {
   LOADING: 2,
 };
 
+let CommandCell = React.memo(({command, onClick}) => (
+  <TableCell colSpan={1} style={{cursor: 'pointer'}} onClick={()=>onClick(command)}>
+    <code style={{paddingRight: '1em'}}>{command}</code>
+  </TableCell>
+))
+
+let ExampleCell = React.memo(({example}) => (
+  <TableCell colSpan={1} style={{textAlign: 'center'}}>
+    <span className="renderedlatex">
+      <MathJax.Node inline>{example}</MathJax.Node>
+    </span>
+  </TableCell>
+))
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -75,6 +89,7 @@ class App extends Component {
     snackBarMessage: '',
     missingPromptState: promptStates.HIDDEN,
     visibleCount: 15,
+    variant: -1,
   }
   loadMoreResults = () => {
     if (this.state.searchResult.length > this.state.visibleCount) {
@@ -131,17 +146,35 @@ class App extends Component {
     let selectedResult = document.querySelector('.result.selected');
     if (selectedResult) selectedResult.scrollIntoViewIfNeeded()
   }
+  nextVariant = () => {
+    let { searchResult, selectedResult, variant } = this.state;
+    let current = searchResult[selectedResult].item;
+    if (current.variants && current.variants.length > 0 && variant < current.variants.length - 1) {
+      this.setState({variant: variant+1});
+    }
+  }
+  lastVariant = () => {
+    let { searchResult, selectedResult, variant } = this.state;
+    let current = searchResult[selectedResult].item;
+    if (current.variants && current.variants.length > 0 && variant >= 0) {
+      this.setState({variant: variant-1});
+    }
+  }
   selectNext = () => {
-    let { selectedResult, searchResult } = this.state;
+    let { selectedResult, searchResult, variant } = this.state;
     let index = selectedResult+1 >= searchResult.length ? 0 : selectedResult+1;
-    this.setState({selectedResult: index});
+    let update = {selectedResult: index};
+    update.variant = -1
+    this.setState(update);
     this.scrollToResult();
     // window.gtag('event', 'select_next');
   }
   selectPrevious = () => {
-    let { selectedResult, searchResult } = this.state;
+    let { selectedResult, searchResult, variant } = this.state;
     let index = selectedResult === 0 ? searchResult.length-1 : selectedResult-1;
-    this.setState({selectedResult: index});
+    let update = {selectedResult: index};
+    update.variant = -1
+    this.setState(update);
     this.scrollToResult();
     // window.gtag('event', 'select_previous');
   }
@@ -158,6 +191,14 @@ class App extends Component {
       this.selectPrevious();
       e.preventDefault();
     }
+    if (e.key === 'ArrowRight') {
+      this.nextVariant();
+      e.preventDefault();
+    }
+    if (e.key === 'ArrowLeft') {
+      this.lastVariant();
+      e.preventDefault();
+    }
   };
   getVisibleDescriptions = (item, matches) => {
     let descriptions = [];
@@ -170,7 +211,7 @@ class App extends Component {
   }
   closeSnackbar = () => this.setState({snackBarMessage: ''});
   render() {
-    let { searchTerm, selectedResult, searchResult, snackBarMessage, missingPromptState, visibleCount } = this.state;
+    let { searchTerm, selectedResult, searchResult, snackBarMessage, missingPromptState, visibleCount, variant } = this.state;
     let visibleResults = searchResult.slice(0, visibleCount);
     return (
       <div className="App">
@@ -192,8 +233,9 @@ class App extends Component {
             <div>
               <Table>
                 <colgroup>
-                  <col style={{width:'30%'}}/>
-                  <col style={{width:'30%'}}/>
+                  <col style={{width:'25%'}}/>
+                  <col style={{width:'25%'}}/>
+                  <col style={{width:'10%'}}/>
                   <col style={{width:'30%'}}/>
                   <col style={{width:'10%'}}/>
                 </colgroup>
@@ -205,10 +247,13 @@ class App extends Component {
                           <div key={d}>"{d}"</div>
                         ))}
                       </TableCell>
-                      <TableCell colSpan={1} style={{cursor: 'pointer'}} onClick={()=>this.copyToClipboard(r.command)}><code style={{paddingRight: '1em'}}>{r.command}</code></TableCell>
-                      <TableCell colSpan={1} style={{textAlign: 'center'}}>
-                        <span className="renderedlatex"><MathJax.Node inline>{r.example}</MathJax.Node></span>
+                      <CommandCell command={variant == -1 || selectedResult !== i ? r.command : r.variants[variant].command} onClick={command=>this.copyToClipboard(command)} />
+                      <TableCell colSpan={1}>
+                        {(r.variants && r.variants.length > 0 && i===selectedResult) && (
+                          <span>+{r.variants.length} variant{r.variants.length>1 && 's'}</span>
+                        )}
                       </TableCell>
+                      <ExampleCell example={variant == -1 || selectedResult !== i ? r.example : r.variants[variant].example} />
                       <TableCell colSpan={1}>
                         {i===selectedResult && (<span className="hint">↵ to copy</span>)}
                       </TableCell>
