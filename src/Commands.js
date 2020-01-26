@@ -402,24 +402,52 @@ const CommandList = [
     example: '\\vdots',
     descriptions: ['dots','...','down','vertical'],
   },
-//   {
-//     command: `\\begin{bmatrix} a_{11} & a_{12} & \ldots \\
-// a_{21} & a_{22} & \ldots\\
-// \vdots & \vdots & \ddots \end{bmatrix}`,
-//     example: `\\begin{bmatrix} a_{11} & a_{12} & \ldots \\
-// a_{21} & a_{22} & \ldots\\
-// \vdots & \vdots & \ddots \end{bmatrix}`,
-//     descriptions: ['bmatrix','matrix','list','array'],
-//   },
-//   {
-//     command: `\\begin{pmatrix} a_{11} & a_{12} & \ldots \\
-// a_{21} & a_{22} & \ldots\\
-// \vdots & \vdots & \ddots \end{pmatrix}`,
-//     example: `\\begin{pmatrix} a_{11} & a_{12} & \ldots \\
-// a_{21} & a_{22} & \ldots\\
-// \vdots & \vdots & \ddots \end{pmatrix}`,
-//     descriptions: ['pmatrix','matrix','list','array'],
-//   },
+  {
+    command: `\\begin{bmatrix}
+    a & b \\\\
+    c & d
+    \\end{bmatrix}`,
+    example: `\\begin{bmatrix}
+    a & b \\\\
+    c & d
+    \\end{bmatrix}`,
+    descriptions: ['matrix','bmatrix','matrix with brackets'],
+    variants: [
+      {
+        command: `\\left[\\begin{array}{}
+        a & b \\\\
+        c & d
+        \\end{array}\\right]`,
+        example: `\\left[\\begin{array}{}
+        a & b \\\\
+        c & d
+        \\end{array}\\right]`,
+      },
+    ],
+  },
+  {
+    command: `\\begin{pmatrix}
+    a & b \\\\
+    c & d
+    \\end{pmatrix}`,
+    example: `\\begin{pmatrix}
+    a & b \\\\
+    c & d
+    \\end{pmatrix}`,
+    descriptions: ['matrix','pmatrix','matrix with parenthesis'],
+    variants: [
+      {
+        command: `\\left(\\begin{array}{}
+        a & b \\\\
+        c & d
+        \\end{array}\\right)`,
+        example: `\\left(\\begin{array}{}
+        a & b \\\\
+        c & d
+        \\end{array}\\right)`,
+      },
+    ],
+  },
   {
     command: '\\lfloor {} \\rfloor',
     example: '\\lfloor {\\frac{a}{b}} \\rfloor',
