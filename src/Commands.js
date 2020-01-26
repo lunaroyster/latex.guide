@@ -449,6 +449,17 @@ const CommandList = [
     ],
   },
   {
+    command: `\\left[\\begin{array}{cc|c}
+    1 & 0 & 12 \\\\
+    0 & 1 & 13
+    \\end{array}\\right]`,
+    example: `\\left[\\begin{array}{cc|c}
+      1 & 0 & 12 \\\\
+      0 & 1 & 13
+      \\end{array}\\right]`,
+    descriptions: ['augmented matrix'],
+  },
+  {
     command: '\\lfloor {} \\rfloor',
     example: '\\lfloor {\\frac{a}{b}} \\rfloor',
     descriptions: ['round down','floor'],
