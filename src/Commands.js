@@ -1,5 +1,10 @@
 const CommandList = [
   {
+    command: '\\to',
+    example: '\\to',
+    descriptions: ['to', 'x approaches', 'right arrow'],
+  },
+  {
     command: '\\frac{}{}',
     example: '\\frac{a}{b}',
     descriptions: ['fraction', 'division'],
