@@ -137,6 +137,10 @@ const CommandList = [
     example: 'A \\mapsto B',
     descriptions: ['Maps to', 'Function mapping', 'Map'],
   },{
+    command: '\\therefore',
+    example: '\\therefore',
+    descriptions: ['Therefore', 'Thus'],
+  },{
     command: '\\iff',
     example: 'P \\iff Q',
     descriptions: ['iff', 'If and only if', 'Material Equivalence'],
