@@ -133,6 +133,10 @@ const CommandList = [
     example: 'P \\implies Q',
     descriptions: ['Implies', 'If P then Q', 'Material Implication', 'Conditional'],
   },{
+    command: '\\mapsto',
+    example: 'A \\mapsto B',
+    descriptions: ['Maps to', 'Function mapping', 'Map'],
+  },{
     command: '\\iff',
     example: 'P \\iff Q',
     descriptions: ['iff', 'If and only if', 'Material Equivalence'],
