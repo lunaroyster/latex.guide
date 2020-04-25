@@ -1,4 +1,6 @@
-# [LaTeX Search](https://github.com/lunaroyster/LaTeX-search/blob/master/README.md)
+# [LaTeX Search](https://github.com/lunaroyster/LaTeX-search/blob/master/README.md) 
+
+[![Run on Repl.it](https://repl.it/badge/github/lunaroyster/LaTeX-search)](https://repl.it/github/lunaroyster/LaTeX-search)
 
 ## Goals:
 
