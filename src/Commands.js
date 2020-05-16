@@ -77,7 +77,7 @@ const CommandList = [
     example: 'x^{a}',
     descriptions: ['exponent', 'superscript', 'raised to the power'],
   },{
-    command: '^{\circ}',
+    command: '^{\\circ}',
     example: 'x^{\\circ}',
     descriptions: ['degree', 'degrees'],
   },{
