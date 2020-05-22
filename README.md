@@ -18,3 +18,14 @@ Fields:
 * `command`: The command itself. This is copied.
 
 More fields will be added later.
+
+## Setting up your dev environment.
+
+* If you want to quickly test out a change, use the `Run on Repl.it` button above.
+
+* To install locally: 
+  * Clone the repository
+  * Make sure you have node and npm installed. I recommend using [nvm](https://github.com/nvm-sh/nvm)
+  * Run `npm install` inside the repository.
+  * Once that completes, run `npm run start`.
+  * The web app should be available at `localhost:3000`
