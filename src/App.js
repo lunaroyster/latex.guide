@@ -83,7 +83,7 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
       key={item.command}
       className={classNames("result", { selected: index === selectedResult })}
       tabIndex={index + 1}
-      onClickRow={onClickRow}
+      onClick={onClickRow}
     >
       <TableCell colSpan={1}>
         {getVisibleDescriptions(item, matches).map((d) => (
@@ -105,7 +105,10 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
         example={example}
       />
       <TableCell colSpan={1}>
-        {index === selectedResult && <span className="hint">↵ to copy</span>}
+        {index === selectedResult && 
+          // we already have enter to focus
+          // eslint-disable-next-line jsx-a11y/interactive-supports-focus 
+          <span className="hint" onClick={() => onCopy(command)} role="button">↵ to copy</span>}
       </TableCell>
     </TableRow>
   );
@@ -421,7 +424,7 @@ class App extends Component {
               </a>
             </div>
           )}
-          <div id="loadMoreGutter">
+          <div id="loadMoreGutter" className="no-print">
             {searchResult.length > visibleCount && (
               <CircularProgress onClick={this.loadMoreResults} />
             )}

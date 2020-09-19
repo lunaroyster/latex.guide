@@ -49,6 +49,7 @@ code {
   padding: 5px;
   border-radius: 25px;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .header {
@@ -89,4 +90,10 @@ code {
 
 .MuiCircularProgress-colorPrimary {
   color: #888888 !important;
+}
+
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+  }
 }

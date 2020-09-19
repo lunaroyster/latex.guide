@@ -584,12 +584,12 @@ const CommandList = [
   },
   {
     command: "\\lfloor {} \\rfloor",
-    example: "\\lfloor {\\frac{a}{b}} \\rfloor",
+    example: "\\lfloor {\\pi} \\rfloor",
     descriptions: ["round down", "floor"],
   },
   {
     command: "\\lceil {} \\rceil",
-    example: "\\lceil {\\frac{a}{b}} \\rceil",
+    example: "\\lceil {\\pi} \\rceil",
     descriptions: ["round up", "ceil"],
   },
   // {
