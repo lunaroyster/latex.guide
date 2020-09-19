@@ -376,7 +376,7 @@ const CommandList = [
     descriptions: ["widehat"],
   },
   {
-    commnad: "\\nabla",
+    command: "\\nabla",
     example: "\\nabla",
     descriptions: ["nabla", "differential"],
   },

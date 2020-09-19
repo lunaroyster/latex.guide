@@ -198,7 +198,7 @@ class App extends Component {
       console.error(e);
     }
   };
-  copyToClipboard = async (text) => {
+  copyToClipboard = async (text, copyMessage) => {
     try {
       const clipboardPerms = await window.navigator.permissions.query({
         name: "clipboard-write",
@@ -221,7 +221,7 @@ class App extends Component {
       console.log(e);
     }
 
-    this.setState({ snackBarMessage: "Copied!" });
+    this.setState({ snackBarMessage: `Copied ${copyMessage}` });
   };
   updateSearch = (e) => {
     this.searchTermChange.next(e);
@@ -231,9 +231,11 @@ class App extends Component {
   };
   pressKey = (e) => {
     if (e.key === "Enter") {
-      if (this.state.searchResult[this.state.selectedResult]) {
+      const res = this.state.searchResult[this.state.selectedResult];
+      if (res) {
         this.copyToClipboard(
-          this.state.searchResult[this.state.selectedResult].item.command
+          res.item.command,
+          res.item.descriptions[0],
         );
       }
     }
@@ -366,7 +368,7 @@ class App extends Component {
               </IconButton>
             </a>
           </div>
-          <MathJax.Context input="tex">
+          <MathJax.Context input="tex" options={{messageStyle: "none"}}>
             <div>
               <Table>
                 <colgroup>
