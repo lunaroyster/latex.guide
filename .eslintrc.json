@@ -67,7 +67,7 @@
     "no-unexpected-multiline": "off",
     "no-unneeded-ternary": "off",
     "no-unused-expressions": "error",
-    "no-unused-vars": "off",
+    "no-unused-vars": "warn",
     "no-use-before-define": "off",
     "no-useless-escape": "error",
     "no-useless-constructor": "off",
@@ -131,6 +131,7 @@
     "vars-on-top": "off",
     "wrap-iife": "off",
     "no-buffer-constructor": "off",
-    "eqeqeq": ["error", "always"]
+    "eqeqeq": ["error", "always"],
+    "no-console": "off"
   }
 }

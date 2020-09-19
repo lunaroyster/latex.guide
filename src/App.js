@@ -1,20 +1,29 @@
-import React, { Component, createRef } from 'react';
-import MathJax from 'react-mathjax2';
-import classNames from 'classnames';
+import React, { Component, createRef } from "react";
+import MathJax from "react-mathjax2";
+import classNames from "classnames";
 
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 
-import { Table, TableRow, TableCell, TableBody, Container, TableHead, Snackbar, IconButton, CircularProgress } from '@material-ui/core';
+import {
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  Container,
+  Snackbar,
+  IconButton,
+  CircularProgress,
+} from "@material-ui/core";
 
-import './App.scss';
+import "./App.scss";
 
-import Commands from './Commands';
+import Commands from "./Commands";
 
-import Fuse from 'fuse.js';
+import Fuse from "fuse.js";
 
 const searchConfig = {
-  keys: ['command', 'descriptions'],
+  keys: ["command", "descriptions"],
   includeMatches: true,
   shouldSort: true,
   minMatchCharLength: 2,
@@ -26,19 +35,81 @@ const promptStates = {
   LOADING: 2,
 };
 
-let CommandCell = React.memo(({command, onClick}) => (
-  <TableCell colSpan={1} style={{cursor: 'pointer'}} onClick={()=>onClick(command)}>
-    <code style={{paddingRight: '1em'}}>{command}</code>
+const CommandCell = ({ command, onClick }) => (
+  <TableCell
+    colSpan={1}
+    style={{ cursor: "pointer" }}
+    onClick={() => onClick(command)}
+  >
+    <code style={{ paddingRight: "1em" }}>{command}</code>
   </TableCell>
-))
+);
 
-let ExampleCell = React.memo(({example}) => (
-  <TableCell colSpan={1} style={{textAlign: 'center'}}>
+const ExampleCell = ({ example }) => (
+  <TableCell colSpan={1} style={{ textAlign: "center" }}>
     <span className="renderedlatex">
       <MathJax.Node inline>{example}</MathJax.Node>
     </span>
   </TableCell>
-))
+);
+
+function CommandRow({ item, selectedResult, variant, index, matches, onClickRow, onCopy }) {
+  const getVisibleDescriptions = (i, matchArray) => {
+    const descriptions = [];
+    for (const m of matchArray) {
+      if (m.key !== "descriptions") {
+        continue;
+      }
+
+      descriptions.push(i.descriptions[m.arrayIndex]);
+    }
+
+    if (descriptions.length === 0) {
+      descriptions.push(i.descriptions[0]);
+    }
+
+    return descriptions;
+  };
+
+  let {command, example} = item;
+
+  if (variant !== -1 && selectedResult === index && item.variants && item.variants[variant]) {
+    command = item.variants[variant].command;
+    example = item.variants[variant].example;
+  }
+
+  return (
+    <TableRow
+      key={item.command}
+      className={classNames("result", { selected: index === selectedResult })}
+      tabIndex={index + 1}
+      onClickRow={onClickRow}
+    >
+      <TableCell colSpan={1}>
+        {getVisibleDescriptions(item, matches).map((d) => (
+          <div key={d}>"{d}"</div>
+        ))}
+      </TableCell>
+      <CommandCell
+        command={command}
+        onClick={(cmd) => onCopy(cmd)}
+      />
+      <TableCell colSpan={1}>
+        {item.variants && item.variants.length > 0 && index === selectedResult && (
+          <span>
+            +{item.variants.length} variant{item.variants.length > 1 && "s"}
+          </span>
+        )}
+      </TableCell>
+      <ExampleCell
+        example={example}
+      />
+      <TableCell colSpan={1}>
+        {index === selectedResult && <span className="hint">↵ to copy</span>}
+      </TableCell>
+    </TableRow>
+  );
+}
 
 class App extends Component {
   constructor(props) {
@@ -46,218 +117,273 @@ class App extends Component {
     this.searchInput = createRef();
     this.latexSearch = new Fuse(Commands, searchConfig);
     this.searchTermChange = new Subject();
-    this.searchTermChange.subscribe(e => {
-      let term = e.target.value;
-      this.setState({searchTerm: term});
+    this.searchTermChange.subscribe((e) => {
+      const term = e.target.value;
+      this.setState({ searchTerm: term });
     });
-    this.searchTermChange.pipe(debounceTime(150)).subscribe(e => {
-      let term = this.state.searchTerm;
-      let results = term.length === 0 ? [] : this.latexSearch.search(term);
+    this.searchTermChange.pipe(debounceTime(150)).subscribe(() => {
+      const term = this.state.searchTerm;
+      const results = term.length === 0 ? [] : this.latexSearch.search(term);
       this.setState({
         searchResult: results,
         selectedResult: 0,
-        missingPromptState: term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
+        missingPromptState:
+          term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
         visibleCount: 15,
       });
     });
+    this.state = {
+      searchTerm: "",
+      searchResult: [],
+      selectedResult: 0,
+      snackBarMessage: "",
+      missingPromptState: promptStates.HIDDEN,
+      visibleCount: 12,
+      variant: -1,
+    };
   }
   componentDidMount() {
     this.searchInput.current.focus();
-    document.addEventListener('keydown', this.keyDown);
-    document.addEventListener('keypress', this.pressKey);
+    document.addEventListener("keydown", this.keyDown);
+    document.addEventListener("keypress", this.pressKey);
 
-    let callback = r => {
-      let entry = r[0];
+    const callback = (r) => {
+      const entry = r[0];
       if (entry.isIntersecting) {
         this.loadMoreResults();
       }
-    }
-    let observer = new IntersectionObserver(callback, {
-      rootMargin: '0px',
-      threshold: 0.1
+    };
+
+    const observer = new window.IntersectionObserver(callback, {
+      rootMargin: "0px",
+      threshold: 0.1,
     });
-    observer.observe(document.querySelector('#loadMoreGutter'));
+    observer.observe(document.querySelector("#loadMoreGutter"));
   }
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keyDown);
-    document.removeEventListener('keypress', this.pressKey);
+    document.removeEventListener("keydown", this.keyDown);
+    document.removeEventListener("keypress", this.pressKey);
   }
-  state = {
-    searchTerm: '',
-    searchResult: [],
-    selectedResult: 0,
-    snackBarMessage: '',
-    missingPromptState: promptStates.HIDDEN,
-    visibleCount: 15,
-    variant: -1,
-  }
+
   loadMoreResults = () => {
     if (this.state.searchResult.length > this.state.visibleCount) {
       this.setState({
         visibleCount: this.state.visibleCount + 5,
-      })
+      });
     }
-  }
+  };
   suggestMissing = async () => {
     try {
-      this.setState({missingPromptState: promptStates.LOADING});
-      await window.fetch('https://us-central1-random-arts.cloudfunctions.net/api/latexguide/missingsymbol', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          suggestion: this.state.searchTerm,
-        }),
+      this.setState({ missingPromptState: promptStates.LOADING });
+      await window.fetch(
+        "https://us-central1-random-arts.cloudfunctions.net/api/latexguide/missingsymbol",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            suggestion: this.state.searchTerm,
+          }),
+        }
+      );
+      this.setState({
+        missingPromptState: promptStates.HIDDEN,
+        snackBarMessage: `Suggested: ${this.state.searchTerm}`,
       });
-      this.setState({missingPromptState: promptStates.HIDDEN, snackBarMessage: `Suggested: ${this.state.searchTerm}`});
-    } catch (e) {}
-  }
-  copyToClipboard = async text => {
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  copyToClipboard = async (text) => {
     try {
-      let clipboardPerms = await navigator.permissions.query({name: "clipboard-write"});
-      if (clipboardPerms.state === "granted" || clipboardPerms.state === "prompt") {
-        await navigator.clipboard.writeText(text);
-        window.gtag('event', 'user_copy');
-      };
+      const clipboardPerms = await window.navigator.permissions.query({
+        name: "clipboard-write",
+      });
+      if (
+        clipboardPerms.state === "granted" ||
+        clipboardPerms.state === "prompt"
+      ) {
+        await window.navigator.clipboard.writeText(text);
+        window.gtag("event", "user_copy");
+      }
     } catch (e) {
       try {
-        await navigator.clipboard.writeText(text);
-        window.gtag('event', 'user_copy');
-      } catch (e) {console.log(e);}
+        await window.navigator.clipboard.writeText(text);
+        window.gtag("event", "user_copy");
+      } catch (err) {
+        console.log(err);
+      }
+
       console.log(e);
     }
-    this.setState({snackBarMessage: 'Copied!'});
-  }
-  updateSearch = e => {
+
+    this.setState({ snackBarMessage: "Copied!" });
+  };
+  updateSearch = (e) => {
     this.searchTermChange.next(e);
-  }
-  clickResult = index => {
-    this.setState({selectedResult: index});
-  }
-  pressKey = e => {
-    if (e.key === 'Enter') {
+  };
+  clickResult = (index) => {
+    this.setState({ selectedResult: index });
+  };
+  pressKey = (e) => {
+    if (e.key === "Enter") {
       if (this.state.searchResult[this.state.selectedResult]) {
-        this.copyToClipboard(this.state.searchResult[this.state.selectedResult].item.command);
+        this.copyToClipboard(
+          this.state.searchResult[this.state.selectedResult].item.command
+        );
       }
     }
-  }
+  };
   scrollToResult = () => {
-    let selectedResult = document.querySelector('.result.selected');
-    if (selectedResult) selectedResult.scrollIntoViewIfNeeded()
-  }
+    const selectedResult = document.querySelector(".result.selected");
+    if (selectedResult) {
+      selectedResult.scrollIntoViewIfNeeded();
+    }
+  };
   nextVariant = () => {
-    let { searchResult, selectedResult, variant } = this.state;
-    let current = searchResult[selectedResult].item;
-    if (current.variants && current.variants.length > 0 && variant < current.variants.length - 1) {
-      this.setState({variant: variant+1});
+    const { searchResult, selectedResult, variant } = this.state;
+    const current = searchResult[selectedResult].item;
+    if (
+      current.variants &&
+      current.variants.length > 0 &&
+      variant < current.variants.length - 1
+    ) {
+      this.setState({ variant: variant + 1 });
     }
-  }
+  };
   lastVariant = () => {
-    let { searchResult, selectedResult, variant } = this.state;
-    let current = searchResult[selectedResult].item;
+    const { searchResult, selectedResult, variant } = this.state;
+    const current = searchResult[selectedResult].item;
     if (current.variants && current.variants.length > 0 && variant >= 0) {
-      this.setState({variant: variant-1});
+      this.setState({ variant: variant - 1 });
     }
-  }
+  };
   selectNext = () => {
-    let { selectedResult, searchResult, variant } = this.state;
-    let index = selectedResult+1 >= searchResult.length ? 0 : selectedResult+1;
-    let update = {selectedResult: index};
-    update.variant = -1
+    const { selectedResult, searchResult } = this.state;
+    const index =
+      selectedResult + 1 >= searchResult.length ? 0 : selectedResult + 1;
+    const update = { selectedResult: index };
+    update.variant = -1;
     this.setState(update);
     this.scrollToResult();
     // window.gtag('event', 'select_next');
-  }
+  };
   selectPrevious = () => {
-    let { selectedResult, searchResult, variant } = this.state;
-    let index = selectedResult === 0 ? searchResult.length-1 : selectedResult-1;
-    let update = {selectedResult: index};
-    update.variant = -1
+    const { selectedResult, searchResult } = this.state;
+    const index =
+      selectedResult === 0 ? searchResult.length - 1 : selectedResult - 1;
+    const update = { selectedResult: index };
+    update.variant = -1;
     this.setState(update);
     this.scrollToResult();
     // window.gtag('event', 'select_previous');
-  }
-  keyDown = e => {
-    if (e.key === 'Tab') {
+  };
+  keyDown = (e) => {
+    if (e.key === "Tab") {
       (e.shiftKey ? this.selectPrevious : this.selectNext)();
       e.preventDefault();
     }
-    if (e.key === 'ArrowDown') {
+
+    if (e.key === "ArrowDown") {
       this.selectNext();
       e.preventDefault();
     }
-    if (e.key === 'ArrowUp') {
+
+    if (e.key === "ArrowUp") {
       this.selectPrevious();
       e.preventDefault();
     }
-    if (e.key === 'ArrowRight') {
+
+    if (e.key === "ArrowRight") {
       this.nextVariant();
       e.preventDefault();
     }
-    if (e.key === 'ArrowLeft') {
+
+    if (e.key === "ArrowLeft") {
       this.lastVariant();
       e.preventDefault();
     }
   };
-  getVisibleDescriptions = (item, matches) => {
-    let descriptions = [];
-    for (let m of matches) {
-      if (m.key !== 'descriptions') continue;
-      descriptions.push(item.descriptions[m.arrayIndex]);
-    }
-    if (descriptions.length === 0) descriptions.push(item.descriptions[0])
-    return descriptions;
-  }
-  closeSnackbar = () => this.setState({snackBarMessage: ''});
+  closeSnackbar = () => this.setState({ snackBarMessage: "" });
   render() {
-    let { searchTerm, selectedResult, searchResult, snackBarMessage, missingPromptState, visibleCount, variant } = this.state;
-    let visibleResults = searchResult.slice(0, visibleCount);
+    const {
+      searchTerm,
+      selectedResult,
+      searchResult,
+      snackBarMessage,
+      missingPromptState,
+      visibleCount,
+      variant,
+    } = this.state;
+    const visibleResults = searchResult.slice(0, visibleCount);
+
     return (
       <div className="App">
-        <Snackbar 
+        <Snackbar
           open={snackBarMessage.length > 0}
-          anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
           autoHideDuration={1000}
           onClose={this.closeSnackbar}
           message={<span id="message-id">{snackBarMessage}</span>}
         />
         <Container>
           <div className="header">
-            <input onChange={e => this.updateSearch(e)} value={searchTerm} ref={this.searchInput} id="searchBox" placeholder="Describe your math symbol..." tabIndex={1} />
-            {missingPromptState === promptStates.READY && <div id="missingSymbol" onClick={this.suggestMissing}>Missing Symbol?</div>}
-            {missingPromptState === promptStates.LOADING && <div><CircularProgress /></div>}
-            <a href="https://github.com/lunaroyster/LaTeX-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/github.svg" alt="Link to project's GitHub page" width={32} height={32} /></IconButton></a>
+            <input
+              onChange={(e) => this.updateSearch(e)}
+              value={searchTerm}
+              ref={this.searchInput}
+              id="searchBox"
+              placeholder="Describe your math symbol..."
+              tabIndex={1}
+              autoComplete="off"
+            />
+            {missingPromptState === promptStates.READY && (
+              <div id="missingSymbol" onClick={this.suggestMissing} role="button" tabIndex={0}>
+                Missing Symbol?
+              </div>
+            )}
+            {missingPromptState === promptStates.LOADING && (
+              <div>
+                <CircularProgress />
+              </div>
+            )}
+            <a
+              href="https://github.com/lunaroyster/LaTeX-search"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconButton>
+                <img
+                  src="/github.svg"
+                  alt="Link to project's GitHub page"
+                  width={32}
+                  height={32}
+                />
+              </IconButton>
+            </a>
           </div>
-          <MathJax.Context input='tex'>
+          <MathJax.Context input="tex">
             <div>
               <Table>
                 <colgroup>
-                  <col style={{width:'25%'}}/>
-                  <col style={{width:'25%'}}/>
-                  <col style={{width:'10%'}}/>
-                  <col style={{width:'30%'}}/>
-                  <col style={{width:'10%'}}/>
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "30%" }} />
+                  <col style={{ width: "10%" }} />
                 </colgroup>
                 <TableBody>
-                  {visibleResults.map(({item: r, matches}, i) => (
-                    <TableRow key={r.command} className={classNames('result', {'selected': i===selectedResult})} tabIndex={i+1} onClick={() => this.clickResult(i)}>
-                      <TableCell colSpan={1}>
-                        {this.getVisibleDescriptions(r, matches).map(d => (
-                          <div key={d}>"{d}"</div>
-                        ))}
-                      </TableCell>
-                      <CommandCell command={variant == -1 || selectedResult !== i ? r.command : r.variants[variant].command} onClick={command=>this.copyToClipboard(command)} />
-                      <TableCell colSpan={1}>
-                        {(r.variants && r.variants.length > 0 && i===selectedResult) && (
-                          <span>+{r.variants.length} variant{r.variants.length>1 && 's'}</span>
-                        )}
-                      </TableCell>
-                      <ExampleCell example={variant == -1 || selectedResult !== i ? r.example : r.variants[variant].example} />
-                      <TableCell colSpan={1}>
-                        {i===selectedResult && (<span className="hint">↵ to copy</span>)}
-                      </TableCell>
-                    </TableRow>
+                  {visibleResults.map(({ item, matches }, i) => (
+                    <CommandRow
+                      index={i}
+                      item={item}
+                      selectedResult={selectedResult}
+                      matches={matches}
+                      onClickRow={() => this.clickResult(i)}
+                      onCopy={(command) => this.copyToClipboard(command)}
+                      variant={variant}
+                    />
                   ))}
                 </TableBody>
               </Table>
@@ -265,8 +391,34 @@ class App extends Component {
           </MathJax.Context>
           {searchResult.length === 0 && (
             <div id="bottomBar">
-              <a href="https://www.producthunt.com/posts/latex-search" target="_blank" rel="noopener noreferrer"><IconButton><img src="/producthunt.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
-              <a href="https://twitter.com/@itsarnavb" target="_blank" rel="noopener noreferrer"><IconButton><img src="/twitter.svg" alt="Link to project's ProductHunt page" width={24} height={24} /></IconButton></a>
+              <a
+                href="https://www.producthunt.com/posts/latex-search"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton>
+                  <img
+                    src="/producthunt.svg"
+                    alt="Link to project's ProductHunt page"
+                    width={24}
+                    height={24}
+                  />
+                </IconButton>
+              </a>
+              <a
+                href="https://twitter.com/@itsarnavb"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconButton>
+                  <img
+                    src="/twitter.svg"
+                    alt="Link to project's ProductHunt page"
+                    width={24}
+                    height={24}
+                  />
+                </IconButton>
+              </a>
             </div>
           )}
           <div id="loadMoreGutter">
