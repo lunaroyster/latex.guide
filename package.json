@@ -1,6 +1,6 @@
 {
   "name": "latexsearch",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "4.8.3",
@@ -13,6 +13,15 @@
     "react-mathjax2": "^0.0.2",
     "react-scripts": "3.1.1",
     "rxjs": "^6.5.4"
+  },
+  "devDependencies": {
+    "babel-eslint": "10.0.2",
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
