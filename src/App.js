@@ -48,11 +48,9 @@ const getFuse = () => {
   return new Fuse(commands, searchConfig);
 }
 
-const promptStates = {
-  HIDDEN: 0,
-  PROMPT: 1,
-  READY: 2,
-  LOADING: 3,
+const appStates = {
+  SEARCH: 0,
+  NEWSYMBOL: 1,
 };
 
 const CommandCell = ({ command, onClick }) => (
@@ -189,8 +187,7 @@ class App extends Component {
       this.setState({
         searchResult: results,
         selectedResult: 0,
-        addCommandState:
-          term.length > 2 ? promptStates.PROMPT : promptStates.HIDDEN,
+        appState: appStates.SEARCH,
         visibleCount: 15,
       });
     });
@@ -199,7 +196,7 @@ class App extends Component {
       searchResult: [],
       selectedResult: 0,
       snackBarMessage: "",
-      addCommandState: promptStates.HIDDEN,
+      appState: appStates.SEARCH,
       visibleCount: 12,
       variant: -1,
     };
@@ -321,6 +318,10 @@ class App extends Component {
     // window.gtag('event', 'select_previous');
   };
   keyDown = (e) => {
+    if (this.state.appState === appStates.NEWSYMBOL) {
+      return;
+    }
+
     if (e.key === "Tab") {
       (e.shiftKey ? this.selectPrevious : this.selectNext)();
       e.preventDefault();
@@ -360,7 +361,7 @@ class App extends Component {
       currentCommands[command.id] = command;
 
       window.localStorage.setItem('user/commands', JSON.stringify(currentCommands))
-      this.setState({addCommandState: promptStates.HIDDEN})
+      this.setState({appState: appStates.SEARCH})
       this.latexSearch = getFuse();
     } catch (e) {
       this.setState({snackBarMessage: "Something went wrong."})
@@ -372,7 +373,7 @@ class App extends Component {
       selectedResult,
       searchResult,
       snackBarMessage,
-      addCommandState,
+      appState,
       visibleCount,
       variant,
     } = this.state;
@@ -398,8 +399,8 @@ class App extends Component {
               tabIndex={1}
               autoComplete="off"
             />
-            {addCommandState === promptStates.PROMPT && (
-              <div id="addSymbol" onClick={() => this.setState({addCommandState: promptStates.READY})} role="button" tabIndex={0}>
+            {(appState === appStates.SEARCH && searchTerm.length > 2) && (
+              <div id="addSymbol" onClick={() => this.setState({appState: appStates.NEWSYMBOL})} role="button" tabIndex={0}>
                 Add new symbol
               </div>
             )}
@@ -416,10 +417,10 @@ class App extends Component {
                   <col style={{ width: "10%" }} />
                 </colgroup>
                 <TableBody>
-                  {(addCommandState === promptStates.READY) && (
+                  {(appState === appStates.NEWSYMBOL) && (
                     <NewCommandRow initialDescription={searchTerm} onSubmit={this.submitNewCommand} />
                   )}
-                  {(addCommandState === promptStates.HIDDEN || addCommandState === promptStates.PROMPT) && (
+                  {(appState === appStates.SEARCH) && (
                     visibleResults.map(({ item, matches }, i) => (
                       <CommandRow
                         index={i}
@@ -429,7 +430,7 @@ class App extends Component {
                         onClickRow={() => this.clickResult(i)}
                         onCopy={(command) => this.copyToClipboard(command)}
                         variant={variant}
-                        key={item.command}
+                        key={item.id || item.command}
                       />
                     ))
                   )}
@@ -437,14 +438,14 @@ class App extends Component {
               </Table>
             </div>
           </MathJax.Context>
-          {searchResult.length === 0 && (
+          {(searchResult.length === 0 || appState === appStates.NEWSYMBOL) && (
             <div id="bottomBar">
               <ProductHuntIcon />
               <TwitterIcon />
             </div>
           )}
           <div id="loadMoreGutter" className="no-print">
-            {searchResult.length > visibleCount && (
+            {(searchResult.length > visibleCount && appState === appStates.SEARCH) && (
               <CircularProgress onClick={this.loadMoreResults} />
             )}
           </div>

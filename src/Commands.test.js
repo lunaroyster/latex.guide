@@ -28,4 +28,12 @@ describe('LaTeX Commands', () => {
       }
     })
   }
+
+  test('There are no duplicate commands', () => {
+    const commandMap = {}
+    for (const cmd of commands) {
+      expect(commandMap[cmd.command]).toBe(undefined);
+      commandMap[cmd.command] = true;
+    }
+  })
 })
