@@ -2,6 +2,8 @@ import React, { Component, createRef } from "react";
 import MathJax from "react-mathjax2";
 import classNames from "classnames";
 
+import {v4 as uuid} from 'uuid';
+
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
@@ -30,10 +32,27 @@ const searchConfig = {
   minMatchCharLength: 2,
 };
 
+const getFuse = () => {
+  const commands = [...Commands];
+
+  try {
+    const c = window.localStorage.getItem('user/commands');
+    if (c && typeof c === 'string') {
+      const userCommands = JSON.parse(c);
+      commands.push(...Object.values(userCommands));
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  
+  return new Fuse(commands, searchConfig);
+}
+
 const promptStates = {
   HIDDEN: 0,
-  READY: 1,
-  LOADING: 2,
+  PROMPT: 1,
+  READY: 2,
+  LOADING: 3,
 };
 
 const CommandCell = ({ command, onClick }) => (
@@ -115,24 +134,63 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
   );
 }
 
+function NewCommandRow({initialDescription, onSubmit}) {
+  const [desc, setDesc] = React.useState(initialDescription);
+  const [command, setCommand] = React.useState('');
+  const [example, setExample] = React.useState('');
+
+  const updateCommand = e => {
+    setCommand(e.target.value);
+    setExample(e.target.value);
+  }
+
+  const submitCommand = () => {
+    onSubmit({
+      id: uuid(),
+      descriptions: [desc],
+      command,
+      example,
+    })
+    setDesc('');
+    setCommand('');
+    setExample('');
+  }
+  
+  return (
+    <TableRow>
+      <TableCell colSpan={1}>
+        <input value={desc} onChange={e => setDesc(e.target.value)} />
+      </TableCell>
+      <TableCell colSpan={1}>
+        <input value={command} onChange={updateCommand} />
+      </TableCell>
+      <TableCell colSpan={1} />
+      <ExampleCell example={example} />
+      <TableCell colSpan={1}>
+        <div onClick={submitCommand}>Submit</div>
+      </TableCell>
+    </TableRow>
+  )
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.searchInput = createRef();
-    this.latexSearch = new Fuse(Commands, searchConfig);
+    this.latexSearch = getFuse();
     this.searchTermChange = new Subject();
     this.searchTermChange.subscribe((e) => {
       const term = e.target.value;
       this.setState({ searchTerm: term });
     });
-    this.searchTermChange.pipe(debounceTime(150)).subscribe(() => {
+    this.searchTermChange.pipe(debounceTime(90)).subscribe(() => {
       const term = this.state.searchTerm;
       const results = term.length === 0 ? [] : this.latexSearch.search(term);
       this.setState({
         searchResult: results,
         selectedResult: 0,
-        missingPromptState:
-          term.length > 2 ? promptStates.READY : promptStates.HIDDEN,
+        addCommandState:
+          term.length > 2 ? promptStates.PROMPT : promptStates.HIDDEN,
         visibleCount: 15,
       });
     });
@@ -141,7 +199,7 @@ class App extends Component {
       searchResult: [],
       selectedResult: 0,
       snackBarMessage: "",
-      missingPromptState: promptStates.HIDDEN,
+      addCommandState: promptStates.HIDDEN,
       visibleCount: 12,
       variant: -1,
     };
@@ -174,29 +232,6 @@ class App extends Component {
       this.setState({
         visibleCount: this.state.visibleCount + 5,
       });
-    }
-  };
-  suggestMissing = async () => {
-    try {
-      this.setState({ missingPromptState: promptStates.LOADING });
-      await window.fetch(
-        "https://us-central1-random-arts.cloudfunctions.net/api/latexguide/missingsymbol",
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({
-            suggestion: this.state.searchTerm,
-          }),
-        }
-      );
-      this.setState({
-        missingPromptState: promptStates.HIDDEN,
-        snackBarMessage: `Suggested: ${this.state.searchTerm}`,
-      });
-    } catch (e) {
-      console.error(e);
     }
   };
   copyToClipboard = async (text, copyMessage) => {
@@ -312,13 +347,32 @@ class App extends Component {
     }
   };
   closeSnackbar = () => this.setState({ snackBarMessage: "" });
+  submitNewCommand = (command) => {
+    let currentCommands;
+    try {
+      const c = window.localStorage.getItem('user/commands');
+      if (c && typeof c === 'string') {
+        currentCommands = JSON.parse(c);
+      } else {
+        currentCommands = {};
+      }
+      
+      currentCommands[command.id] = command;
+
+      window.localStorage.setItem('user/commands', JSON.stringify(currentCommands))
+      this.setState({addCommandState: promptStates.HIDDEN})
+      this.latexSearch = getFuse();
+    } catch (e) {
+      this.setState({snackBarMessage: "Something went wrong."})
+    }
+  }
   render() {
     const {
       searchTerm,
       selectedResult,
       searchResult,
       snackBarMessage,
-      missingPromptState,
+      addCommandState,
       visibleCount,
       variant,
     } = this.state;
@@ -344,14 +398,9 @@ class App extends Component {
               tabIndex={1}
               autoComplete="off"
             />
-            {missingPromptState === promptStates.READY && (
-              <div id="missingSymbol" onClick={this.suggestMissing} role="button" tabIndex={0}>
-                Missing Symbol?
-              </div>
-            )}
-            {missingPromptState === promptStates.LOADING && (
-              <div>
-                <CircularProgress />
+            {addCommandState === promptStates.PROMPT && (
+              <div id="addSymbol" onClick={() => this.setState({addCommandState: promptStates.READY})} role="button" tabIndex={0}>
+                Add new symbol
               </div>
             )}
             <GithubIcon />
@@ -367,18 +416,23 @@ class App extends Component {
                   <col style={{ width: "10%" }} />
                 </colgroup>
                 <TableBody>
-                  {visibleResults.map(({ item, matches }, i) => (
-                    <CommandRow
-                      index={i}
-                      item={item}
-                      selectedResult={selectedResult}
-                      matches={matches}
-                      onClickRow={() => this.clickResult(i)}
-                      onCopy={(command) => this.copyToClipboard(command)}
-                      variant={variant}
-                      key={item.command}
-                    />
-                  ))}
+                  {(addCommandState === promptStates.READY) && (
+                    <NewCommandRow initialDescription={searchTerm} onSubmit={this.submitNewCommand} />
+                  )}
+                  {(addCommandState === promptStates.HIDDEN || addCommandState === promptStates.PROMPT) && (
+                    visibleResults.map(({ item, matches }, i) => (
+                      <CommandRow
+                        index={i}
+                        item={item}
+                        selectedResult={selectedResult}
+                        matches={matches}
+                        onClickRow={() => this.clickResult(i)}
+                        onCopy={(command) => this.copyToClipboard(command)}
+                        variant={variant}
+                        key={item.command}
+                      />
+                    ))
+                  )}
                 </TableBody>
               </Table>
             </div>
