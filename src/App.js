@@ -5,6 +5,8 @@ import classNames from "classnames";
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
+import { GithubIcon, ProductHuntIcon, TwitterIcon } from './Icons';
+
 import {
   Table,
   TableRow,
@@ -12,7 +14,6 @@ import {
   TableBody,
   Container,
   Snackbar,
-  IconButton,
   CircularProgress,
 } from "@material-ui/core";
 
@@ -353,20 +354,7 @@ class App extends Component {
                 <CircularProgress />
               </div>
             )}
-            <a
-              href="https://github.com/lunaroyster/LaTeX-search"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconButton>
-                <img
-                  src="/github.svg"
-                  alt="Link to project's GitHub page"
-                  width={32}
-                  height={32}
-                />
-              </IconButton>
-            </a>
+            <GithubIcon />
           </div>
           <MathJax.Context input="tex" options={{messageStyle: "none"}}>
             <div>
@@ -388,6 +376,7 @@ class App extends Component {
                       onClickRow={() => this.clickResult(i)}
                       onCopy={(command) => this.copyToClipboard(command)}
                       variant={variant}
+                      key={item.command}
                     />
                   ))}
                 </TableBody>
@@ -396,34 +385,8 @@ class App extends Component {
           </MathJax.Context>
           {searchResult.length === 0 && (
             <div id="bottomBar">
-              <a
-                href="https://www.producthunt.com/posts/latex-search"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton>
-                  <img
-                    src="/producthunt.svg"
-                    alt="Link to project's ProductHunt page"
-                    width={24}
-                    height={24}
-                  />
-                </IconButton>
-              </a>
-              <a
-                href="https://twitter.com/@itsarnavb"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <IconButton>
-                  <img
-                    src="/twitter.svg"
-                    alt="Link to project's ProductHunt page"
-                    width={24}
-                    height={24}
-                  />
-                </IconButton>
-              </a>
+              <ProductHuntIcon />
+              <TwitterIcon />
             </div>
           )}
           <div id="loadMoreGutter" className="no-print">

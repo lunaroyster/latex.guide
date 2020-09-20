@@ -15,13 +15,19 @@
     "rxjs": "^6.5.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
     "babel-eslint": "10.0.2",
+    "babel-jest": "^24.8.0",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.1.2"
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "jest": "24.8.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,6 +37,14 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "jest": {
+    "transform": {
+      ".*(ts|js)x?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "browserslist": {
     "production": [
