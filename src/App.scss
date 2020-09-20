@@ -25,11 +25,10 @@
 .result {
   /* padding: 2em 1em; */
   cursor: pointer;
-}
-
-.result:hover {
-  background-color: #e8e8e8;
-  transition: 0.2s all;
+  &:hover {
+    background-color: #e8e8e8;
+    transition: 0.2s background-color;
+  }
 }
 
 .result.selected {
@@ -44,12 +43,48 @@ code {
   white-space: pre-line;
 }
 
+.descriptionInput {
+  background: none;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.latexInput {
+  background: #eee;
+  padding: 0.3em;
+  border: none;
+  outline: none;
+  font-family: monospace;
+  color: #444;
+}
+
+.submitNewCommand {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  color: #aaa;
+  visibility: hidden;
+  opacity: 0;
+  &:focus {
+    color: #000;
+    transition: 0.3s color;
+  }
+  &.enabled {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear 0s, opacity 300ms;
+  }
+}
+
 .hint {
   background-color: #ccc;
-  padding: 5px;
   border-radius: 25px;
   white-space: nowrap;
   cursor: pointer;
+  padding: 5px 10px;
+  font-family: monospace;
+  transition: 0.2s background-color;
 }
 
 .header {
@@ -58,11 +93,12 @@ code {
   margin-bottom: 0.5em;
   #addSymbol {
     white-space: nowrap;
-    padding: 1em;
+    padding: 1em 3em;
     color: #888;
     cursor: pointer;
-    font-family: monospace;
     font-size: 0.75em;
+    display: flex;
+    align-items: center;
   }
 }
 

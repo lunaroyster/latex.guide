@@ -19,6 +19,9 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 
+import Check from '@material-ui/icons/Check';
+import Add from '@material-ui/icons/Add';
+
 import "./App.scss";
 
 import Commands from "./Commands";
@@ -132,10 +135,43 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
   );
 }
 
-function NewCommandRow({initialDescription, onSubmit}) {
+function NewCommandRow({initialDescription, onSubmit, onClose}) {
   const [desc, setDesc] = React.useState(initialDescription);
   const [command, setCommand] = React.useState('');
   const [example, setExample] = React.useState('');
+
+  const descRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (descRef && descRef.current) {
+      descRef.current.focus();
+    }
+
+    window.gtag("event", "user_add_symbol_start");
+  }, []);
+
+  React.useEffect(() => {
+    const onKeyPress = e => {
+      if (e.key === 'Enter' && command.length > 0) {
+        submitCommand();
+      }
+
+    }
+
+    const onKeyDown = e => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    }
+
+    document.addEventListener('keypress', onKeyPress);
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keypress', onKeyPress); 
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [command, desc])
 
   const updateCommand = e => {
     setCommand(e.target.value);
@@ -152,20 +188,23 @@ function NewCommandRow({initialDescription, onSubmit}) {
     setDesc('');
     setCommand('');
     setExample('');
+    window.gtag("event", "user_add_symbol_finish");
   }
   
   return (
     <TableRow>
       <TableCell colSpan={1}>
-        <input value={desc} onChange={e => setDesc(e.target.value)} />
+        <input ref={descRef} value={desc} onChange={e => setDesc(e.target.value)} className="descriptionInput" placeholder="Describe your symbol" />
       </TableCell>
       <TableCell colSpan={1}>
-        <input value={command} onChange={updateCommand} />
+        <input value={command} onChange={updateCommand} className="latexInput" placeholder="Enter LaTeX here" />
       </TableCell>
       <TableCell colSpan={1} />
       <ExampleCell example={example} />
       <TableCell colSpan={1}>
-        <div onClick={submitCommand}>Submit</div>
+        <div onClick={submitCommand} className={classNames("submitNewCommand", {enabled: command.length > 0})} role="button" tabIndex={0}>
+          <Check />
+        </div>
       </TableCell>
     </TableRow>
   )
@@ -263,7 +302,7 @@ class App extends Component {
     this.setState({ selectedResult: index });
   };
   pressKey = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && this.state.appState === appStates.SEARCH) {
       const res = this.state.searchResult[this.state.selectedResult];
       if (res) {
         this.copyToClipboard(
@@ -361,7 +400,10 @@ class App extends Component {
       currentCommands[command.id] = command;
 
       window.localStorage.setItem('user/commands', JSON.stringify(currentCommands))
-      this.setState({appState: appStates.SEARCH})
+      this.setState({
+        appState: appStates.SEARCH,
+        snackBarMessage: `Added symbol: ${command.descriptions[0]}`,
+      })
       this.latexSearch = getFuse();
     } catch (e) {
       this.setState({snackBarMessage: "Something went wrong."})
@@ -401,7 +443,7 @@ class App extends Component {
             />
             {(appState === appStates.SEARCH && searchTerm.length > 2) && (
               <div id="addSymbol" onClick={() => this.setState({appState: appStates.NEWSYMBOL})} role="button" tabIndex={0}>
-                Add new symbol
+                <Add /> Add symbol
               </div>
             )}
             <GithubIcon />
@@ -418,7 +460,7 @@ class App extends Component {
                 </colgroup>
                 <TableBody>
                   {(appState === appStates.NEWSYMBOL) && (
-                    <NewCommandRow initialDescription={searchTerm} onSubmit={this.submitNewCommand} />
+                    <NewCommandRow initialDescription={searchTerm} onSubmit={c => this.submitNewCommand(c)} onClose={() => this.setState({appState: appStates.SEARCH})} />
                   )}
                   {(appState === appStates.SEARCH) && (
                     visibleResults.map(({ item, matches }, i) => (
@@ -428,7 +470,7 @@ class App extends Component {
                         selectedResult={selectedResult}
                         matches={matches}
                         onClickRow={() => this.clickResult(i)}
-                        onCopy={(command) => this.copyToClipboard(command)}
+                        onCopy={(command) => this.copyToClipboard(command, item.descriptions[0])}
                         variant={variant}
                         key={item.id || item.command}
                       />
