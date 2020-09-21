@@ -137,7 +137,8 @@ code {
 }
 
 @media print {
-  .no-print, .no-print * {
+  .no-print,
+  .no-print * {
     display: none !important;
   }
 }

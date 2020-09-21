@@ -2,23 +2,23 @@ import React, { Component, createRef } from "react";
 import MathJax from "react-mathjax2";
 import classNames from "classnames";
 
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from "uuid";
 
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
-import { GithubIcon, ProductHuntIcon, TwitterIcon } from './Icons';
+import { GithubIcon, ProductHuntIcon, TwitterIcon } from "./Icons";
 
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableBody from '@material-ui/core/TableBody';
-import Container from '@material-ui/core/Container';
-import Snackbar from '@material-ui/core/Snackbar';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Table from "@material-ui/core/Table";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import Container from "@material-ui/core/Container";
+import Snackbar from "@material-ui/core/Snackbar";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-import Check from '@material-ui/icons/Check';
-import Add from '@material-ui/icons/Add';
+import Check from "@material-ui/icons/Check";
+import Add from "@material-ui/icons/Add";
 
 import "./App.scss";
 
@@ -35,8 +35,8 @@ const searchConfig = {
 
 const getUserCommands = () => {
   try {
-    const c = window.localStorage.getItem('user/commands');
-    if (c && typeof c === 'string') {
+    const c = window.localStorage.getItem("user/commands");
+    if (c && typeof c === "string") {
       const userCommands = JSON.parse(c);
 
       return Object.values(userCommands);
@@ -46,15 +46,15 @@ const getUserCommands = () => {
   }
 
   return [];
-}
+};
 
 const getFuse = () => {
   const commands = [...Commands];
 
-  commands.push(...getUserCommands())
-  
+  commands.push(...getUserCommands());
+
   return new Fuse(commands, searchConfig);
-}
+};
 
 const appStates = {
   SEARCH: 0,
@@ -79,7 +79,15 @@ const ExampleCell = ({ example }) => (
   </TableCell>
 );
 
-function CommandRow({ item, selectedResult, variant, index, matches, onClickRow, onCopy }) {
+function CommandRow({
+  item,
+  selectedResult,
+  variant,
+  index,
+  matches,
+  onClickRow,
+  onCopy,
+}) {
   const getVisibleDescriptions = (i, matchArray) => {
     const descriptions = [];
     for (const m of matchArray) {
@@ -97,9 +105,14 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
     return descriptions;
   };
 
-  let {command, example} = item;
+  let { command, example } = item;
 
-  if (variant !== -1 && selectedResult === index && item.variants && item.variants[variant]) {
+  if (
+    variant !== -1 &&
+    selectedResult === index &&
+    item.variants &&
+    item.variants[variant]
+  ) {
     command = item.variants[variant].command;
     example = item.variants[variant].example;
   }
@@ -116,10 +129,7 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
           <div key={d}>"{d}"</div>
         ))}
       </TableCell>
-      <CommandCell
-        command={command}
-        onClick={(cmd) => onCopy(cmd)}
-      />
+      <CommandCell command={command} onClick={(cmd) => onCopy(cmd)} />
       <TableCell colSpan={1}>
         {item.variants && item.variants.length > 0 && index === selectedResult && (
           <span>
@@ -127,23 +137,24 @@ function CommandRow({ item, selectedResult, variant, index, matches, onClickRow,
           </span>
         )}
       </TableCell>
-      <ExampleCell
-        example={example}
-      />
+      <ExampleCell example={example} />
       <TableCell colSpan={1}>
-        {index === selectedResult && 
+        {index === selectedResult && (
           // we already have enter to focus
-          // eslint-disable-next-line jsx-a11y/interactive-supports-focus 
-          <span className="hint" onClick={() => onCopy(command)} role="button">↵ to copy</span>}
+          // eslint-disable-next-line jsx-a11y/interactive-supports-focus
+          <span className="hint" onClick={() => onCopy(command)} role="button">
+            ↵ to copy
+          </span>
+        )}
       </TableCell>
     </TableRow>
   );
 }
 
-function NewCommandRow({initialDescription, onSubmit, onClose}) {
+function NewCommandRow({ initialDescription, onSubmit, onClose }) {
   const [desc, setDesc] = React.useState(initialDescription);
-  const [command, setCommand] = React.useState('');
-  const [example, setExample] = React.useState('');
+  const [command, setCommand] = React.useState("");
+  const [example, setExample] = React.useState("");
 
   const descRef = React.useRef(null);
 
@@ -156,32 +167,31 @@ function NewCommandRow({initialDescription, onSubmit, onClose}) {
   }, []);
 
   React.useEffect(() => {
-    const onKeyPress = e => {
-      if (e.key === 'Enter' && command.length > 0) {
+    const onKeyPress = (e) => {
+      if (e.key === "Enter" && command.length > 0) {
         submitCommand();
       }
+    };
 
-    }
-
-    const onKeyDown = e => {
-      if (e.key === 'Escape') {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
         onClose();
       }
-    }
+    };
 
-    document.addEventListener('keypress', onKeyPress);
-    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener("keypress", onKeyPress);
+    document.addEventListener("keydown", onKeyDown);
 
     return () => {
-      document.removeEventListener('keypress', onKeyPress); 
-      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener("keypress", onKeyPress);
+      document.removeEventListener("keydown", onKeyDown);
     };
-  }, [command, desc])
+  }, [command, desc]);
 
-  const updateCommand = e => {
+  const updateCommand = (e) => {
     setCommand(e.target.value);
     setExample(e.target.value);
-  }
+  };
 
   const submitCommand = () => {
     onSubmit({
@@ -189,30 +199,48 @@ function NewCommandRow({initialDescription, onSubmit, onClose}) {
       descriptions: [desc],
       command,
       example,
-    })
-    setDesc('');
-    setCommand('');
-    setExample('');
+    });
+    setDesc("");
+    setCommand("");
+    setExample("");
     window.gtag("event", "user_add_symbol_finish");
-  }
-  
+  };
+
   return (
     <TableRow>
       <TableCell colSpan={1}>
-        <input ref={descRef} value={desc} onChange={e => setDesc(e.target.value)} className="descriptionInput" placeholder="Describe your symbol" />
+        <input
+          ref={descRef}
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+          className="descriptionInput"
+          placeholder="Describe your symbol"
+        />
       </TableCell>
       <TableCell colSpan={1}>
-        <input value={command} onChange={updateCommand} className="latexInput" placeholder="Enter LaTeX here" />
+        <input
+          value={command}
+          onChange={updateCommand}
+          className="latexInput"
+          placeholder="Enter LaTeX here"
+        />
       </TableCell>
       <TableCell colSpan={1} />
       <ExampleCell example={example} />
       <TableCell colSpan={1}>
-        <div onClick={submitCommand} className={classNames("submitNewCommand", {enabled: command.length > 0})} role="button" tabIndex={0}>
+        <div
+          onClick={submitCommand}
+          className={classNames("submitNewCommand", {
+            enabled: command.length > 0,
+          })}
+          role="button"
+          tabIndex={0}
+        >
           <Check />
         </div>
       </TableCell>
     </TableRow>
-  )
+  );
 }
 
 class App extends Component {
@@ -310,10 +338,7 @@ class App extends Component {
     if (e.key === "Enter" && this.state.appState === appStates.SEARCH) {
       const res = this.state.searchResult[this.state.selectedResult];
       if (res) {
-        this.copyToClipboard(
-          res.item.command,
-          res.item.descriptions[0],
-        );
+        this.copyToClipboard(res.item.command, res.item.descriptions[0]);
       }
     }
   };
@@ -395,25 +420,28 @@ class App extends Component {
   submitNewCommand = (command) => {
     let currentCommands;
     try {
-      const c = window.localStorage.getItem('user/commands');
-      if (c && typeof c === 'string') {
+      const c = window.localStorage.getItem("user/commands");
+      if (c && typeof c === "string") {
         currentCommands = JSON.parse(c);
       } else {
         currentCommands = {};
       }
-      
+
       currentCommands[command.id] = command;
 
-      window.localStorage.setItem('user/commands', JSON.stringify(currentCommands))
+      window.localStorage.setItem(
+        "user/commands",
+        JSON.stringify(currentCommands)
+      );
       this.setState({
         appState: appStates.SEARCH,
         snackBarMessage: `Added symbol: ${command.descriptions[0]}`,
-      })
+      });
       this.latexSearch = getFuse();
     } catch (e) {
-      this.setState({snackBarMessage: "Something went wrong."})
+      this.setState({ snackBarMessage: "Something went wrong." });
     }
-  }
+  };
   render() {
     const {
       searchTerm,
@@ -436,85 +464,100 @@ class App extends Component {
           message={<span id="message-id">{snackBarMessage}</span>}
         />
         <main>
-        <Container>
-          <div className="header">
-            <input
-              onChange={(e) => this.updateSearch(e)}
-              value={searchTerm}
-              ref={this.searchInput}
-              id="searchBox"
-              placeholder="Describe your math symbol..."
-              tabIndex={1}
-              autoComplete="off"
-              aria-label="Type here to search for math symbols in LaTeX"
-            />
-            {(appState === appStates.SEARCH && searchTerm.length > 2) && (
-              <div id="addSymbol" onClick={() => this.setState({appState: appStates.NEWSYMBOL})} role="button" tabIndex={0}>
-                <Add /> Add symbol
+          <Container>
+            <div className="header">
+              <input
+                onChange={(e) => this.updateSearch(e)}
+                value={searchTerm}
+                ref={this.searchInput}
+                id="searchBox"
+                placeholder="Describe your math symbol..."
+                tabIndex={1}
+                autoComplete="off"
+                aria-label="Type here to search for math symbols in LaTeX"
+              />
+              {appState === appStates.SEARCH && searchTerm.length > 2 && (
+                <div
+                  id="addSymbol"
+                  onClick={() =>
+                    this.setState({ appState: appStates.NEWSYMBOL })
+                  }
+                  role="button"
+                  tabIndex={0}
+                >
+                  <Add /> Add symbol
+                </div>
+              )}
+              <GithubIcon />
+            </div>
+            <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
+              <div>
+                <Table>
+                  <colgroup>
+                    <col style={{ width: "25%" }} />
+                    <col style={{ width: "25%" }} />
+                    <col style={{ width: "10%" }} />
+                    <col style={{ width: "30%" }} />
+                    <col style={{ width: "10%" }} />
+                  </colgroup>
+                  <TableBody>
+                    {appState === appStates.NEWSYMBOL && (
+                      <>
+                        <NewCommandRow
+                          initialDescription={searchTerm}
+                          onSubmit={(c) => this.submitNewCommand(c)}
+                          onClose={() =>
+                            this.setState({ appState: appStates.SEARCH })
+                          }
+                        />
+                        {getUserCommands().length > 0 && (
+                          <>
+                            <div className="user-symbols">Your symbols</div>
+                            {getUserCommands().map((item, i) => (
+                              <CommandRow
+                                index={i}
+                                item={item}
+                                selectedResult={-1}
+                                matches={[]}
+                                key={item.id}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </>
+                    )}
+                    {appState === appStates.SEARCH &&
+                      visibleResults.map(({ item, matches }, i) => (
+                        <CommandRow
+                          index={i}
+                          item={item}
+                          selectedResult={selectedResult}
+                          matches={matches}
+                          onClickRow={() => this.clickResult(i)}
+                          onCopy={(command) =>
+                            this.copyToClipboard(command, item.descriptions[0])
+                          }
+                          variant={variant}
+                          key={item.id || item.command}
+                        />
+                      ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </MathJax.Context>
+            {searchResult.length === 0 && appState === appStates.SEARCH && (
+              <div id="bottomBar">
+                <ProductHuntIcon />
+                <TwitterIcon />
               </div>
             )}
-            <GithubIcon />
-          </div>
-          <MathJax.Context input="tex" options={{messageStyle: "none"}}>
-            <div>
-              <Table>
-                <colgroup>
-                  <col style={{ width: "25%" }} />
-                  <col style={{ width: "25%" }} />
-                  <col style={{ width: "10%" }} />
-                  <col style={{ width: "30%" }} />
-                  <col style={{ width: "10%" }} />
-                </colgroup>
-                <TableBody>
-                  {(appState === appStates.NEWSYMBOL) && (
-                    <>
-                      <NewCommandRow initialDescription={searchTerm} onSubmit={c => this.submitNewCommand(c)} onClose={() => this.setState({appState: appStates.SEARCH})} />
-                      {getUserCommands().length > 0 && (
-                        <>
-                          <div className="user-symbols">Your symbols</div>
-                          {getUserCommands().map((item, i) => (
-                            <CommandRow 
-                              index={i}
-                              item={item}
-                              selectedResult={-1}
-                              matches={[]}
-                              key={item.id}
-                            />
-                          ))}
-                        </>
-                      )}
-                    </>
-                  )}
-                  {(appState === appStates.SEARCH) && (
-                    visibleResults.map(({ item, matches }, i) => (
-                      <CommandRow
-                        index={i}
-                        item={item}
-                        selectedResult={selectedResult}
-                        matches={matches}
-                        onClickRow={() => this.clickResult(i)}
-                        onCopy={(command) => this.copyToClipboard(command, item.descriptions[0])}
-                        variant={variant}
-                        key={item.id || item.command}
-                      />
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+            <div id="loadMoreGutter" className="no-print">
+              {searchResult.length > visibleCount &&
+                appState === appStates.SEARCH && (
+                  <CircularProgress onClick={this.loadMoreResults} />
+                )}
             </div>
-          </MathJax.Context>
-          {(searchResult.length === 0 && appState === appStates.SEARCH) && (
-            <div id="bottomBar">
-              <ProductHuntIcon />
-              <TwitterIcon />
-            </div>
-          )}
-          <div id="loadMoreGutter" className="no-print">
-            {(searchResult.length > visibleCount && appState === appStates.SEARCH) && (
-              <CircularProgress onClick={this.loadMoreResults} />
-            )}
-          </div>
-        </Container>
+          </Container>
         </main>
       </div>
     );

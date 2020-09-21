@@ -1,23 +1,23 @@
 /* eslint-env jest */
 
-import commands from './Commands';
+import commands from "./Commands";
 
 function verifyCommandAndExample(cmd) {
-  expect(typeof cmd.command).toBe('string');
-  expect(typeof cmd.example).toBe('string');
+  expect(typeof cmd.command).toBe("string");
+  expect(typeof cmd.example).toBe("string");
 }
 
-describe('LaTeX Commands', () => {
-  test('commands is an array', () => {
+describe("LaTeX Commands", () => {
+  test("commands is an array", () => {
     expect(commands.constructor).toBe(Array);
-  })
+  });
   for (const cmd of commands) {
     it(`Command is valid: ${cmd.command}`, () => {
       verifyCommandAndExample(cmd);
       expect(cmd.descriptions).toBeDefined();
       expect(cmd.descriptions.constructor).toBe(Array);
       for (const desc of cmd.descriptions) {
-        expect(typeof desc).toBe('string');
+        expect(typeof desc).toBe("string");
       }
 
       if (cmd.variants) {
@@ -26,14 +26,14 @@ describe('LaTeX Commands', () => {
           verifyCommandAndExample(variant);
         }
       }
-    })
+    });
   }
 
-  test('There are no duplicate commands', () => {
-    const commandMap = {}
+  test("There are no duplicate commands", () => {
+    const commandMap = {};
     for (const cmd of commands) {
       expect(commandMap[cmd.command]).toBe(undefined);
       commandMap[cmd.command] = true;
     }
-  })
-})
+  });
+});

@@ -322,8 +322,8 @@ const CommandList = [
       {
         command: "\\sum\\limits_{}^{}",
         example: "\\sum\\limits_{n=0}^{\\infty} x",
-      }
-    ]
+      },
+    ],
   },
   {
     command: "\\prod_{}^{}",
