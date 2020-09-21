@@ -435,6 +435,7 @@ class App extends Component {
           onClose={this.closeSnackbar}
           message={<span id="message-id">{snackBarMessage}</span>}
         />
+        <main>
         <Container>
           <div className="header">
             <input
@@ -445,6 +446,7 @@ class App extends Component {
               placeholder="Describe your math symbol..."
               tabIndex={1}
               autoComplete="off"
+              aria-label="Type here to search for math symbols in LaTeX"
             />
             {(appState === appStates.SEARCH && searchTerm.length > 2) && (
               <div id="addSymbol" onClick={() => this.setState({appState: appStates.NEWSYMBOL})} role="button" tabIndex={0}>
@@ -513,6 +515,7 @@ class App extends Component {
             )}
           </div>
         </Container>
+        </main>
       </div>
     );
   }
