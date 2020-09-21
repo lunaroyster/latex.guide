@@ -35,18 +35,25 @@ const searchConfig = {
   minMatchCharLength: 2,
 };
 
-const getFuse = () => {
-  const commands = [...Commands];
-
+const getUserCommands = () => {
   try {
     const c = window.localStorage.getItem('user/commands');
     if (c && typeof c === 'string') {
       const userCommands = JSON.parse(c);
-      commands.push(...Object.values(userCommands));
+
+      return Object.values(userCommands);
     }
   } catch (e) {
     console.log(e);
   }
+
+  return [];
+}
+
+const getFuse = () => {
+  const commands = [...Commands];
+
+  commands.push(...getUserCommands())
   
   return new Fuse(commands, searchConfig);
 }
@@ -460,7 +467,23 @@ class App extends Component {
                 </colgroup>
                 <TableBody>
                   {(appState === appStates.NEWSYMBOL) && (
-                    <NewCommandRow initialDescription={searchTerm} onSubmit={c => this.submitNewCommand(c)} onClose={() => this.setState({appState: appStates.SEARCH})} />
+                    <>
+                      <NewCommandRow initialDescription={searchTerm} onSubmit={c => this.submitNewCommand(c)} onClose={() => this.setState({appState: appStates.SEARCH})} />
+                      {getUserCommands().length > 0 && (
+                        <>
+                          <div className="user-symbols">Your symbols</div>
+                          {getUserCommands().map((item, i) => (
+                            <CommandRow 
+                              index={i}
+                              item={item}
+                              selectedResult={-1}
+                              matches={[]}
+                              key={item.id}
+                            />
+                          ))}
+                        </>
+                      )}
+                    </>
                   )}
                   {(appState === appStates.SEARCH) && (
                     visibleResults.map(({ item, matches }, i) => (
@@ -480,7 +503,7 @@ class App extends Component {
               </Table>
             </div>
           </MathJax.Context>
-          {(searchResult.length === 0 || appState === appStates.NEWSYMBOL) && (
+          {(searchResult.length === 0 && appState === appStates.SEARCH) && (
             <div id="bottomBar">
               <ProductHuntIcon />
               <TwitterIcon />
