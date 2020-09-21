@@ -9,15 +9,13 @@ import { debounceTime } from "rxjs/operators";
 
 import { GithubIcon, ProductHuntIcon, TwitterIcon } from './Icons';
 
-import {
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  Container,
-  Snackbar,
-  CircularProgress,
-} from "@material-ui/core";
+import Table from '@material-ui/core/Table';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+import Container from '@material-ui/core/Container';
+import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Check from '@material-ui/icons/Check';
 import Add from '@material-ui/icons/Add';
