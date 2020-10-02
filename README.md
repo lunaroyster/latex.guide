@@ -29,3 +29,5 @@ More fields will be added later.
   * Run `npm install` inside the repository.
   * Once that completes, run `npm run start`.
   * The web app should be available at `localhost:3000`
+
+Thank you for contributing
