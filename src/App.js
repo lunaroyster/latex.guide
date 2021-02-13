@@ -478,7 +478,7 @@ class App extends Component {
                 autoComplete="off"
                 aria-label="Type here to search for math symbols in LaTeX"
               />
-              {appState === appStates.SEARCH && searchTerm.length > 2 && (
+              {/* {appState === appStates.SEARCH && searchTerm.length > 2 && (
                 <div
                   id="addSymbol"
                   onClick={() =>
@@ -488,7 +488,7 @@ class App extends Component {
                 >
                   <Add /> Add symbol
                 </div>
-              )}
+              )} */}
               <GithubIcon />
             </div>
             <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
