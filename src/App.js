@@ -1,4 +1,4 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import MathJax from "react-mathjax2";
 import classNames from "classnames";
 
@@ -246,7 +246,7 @@ function NewCommandRow({ initialDescription, onSubmit, onClose }) {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.searchInput = createRef();
+    this.searchInput = React.createRef();
     this.latexSearch = getFuse();
     this.searchTermChange = new Subject();
     this.searchTermChange.subscribe((e) => {
@@ -476,7 +476,7 @@ class App extends Component {
                 autoComplete="off"
                 aria-label="Type here to search for math symbols in LaTeX"
               />
-              {/* {appState === appStates.SEARCH && searchTerm.length > 2 && (
+              {appState === appStates.SEARCH && searchTerm.length > 2 && (
                 <div
                   id="addSymbol"
                   onClick={() =>
@@ -486,7 +486,7 @@ class App extends Component {
                 >
                   <Add /> Add symbol
                 </div>
-              )} */}
+              )}
               <GithubIcon />
             </div>
             <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
