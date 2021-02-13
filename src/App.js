@@ -95,7 +95,7 @@ function CommandRow({
         continue;
       }
 
-      descriptions.push(i.descriptions[m.arrayIndex]);
+      descriptions.push(i.descriptions[m.refIndex]);
     }
 
     if (descriptions.length === 0) {
@@ -274,7 +274,9 @@ class App extends Component {
     };
   }
   componentDidMount() {
-    this.searchInput.current.focus();
+    if (this.searchInput.current) {
+      this.searchInput.current.focus();
+    }
     document.addEventListener("keydown", this.keyDown);
     document.addEventListener("keypress", this.pressKey);
 
