@@ -476,18 +476,17 @@ class App extends Component {
                 autoComplete="off"
                 aria-label="Type here to search for math symbols in LaTeX"
               />
-              {appState === appStates.SEARCH && searchTerm.length > 2 && (
+              {/* {appState === appStates.SEARCH && searchTerm.length > 2 && (
                 <div
                   id="addSymbol"
                   onClick={() =>
-                    this.setState({ appState: appStates.NEWSYMBOL })
-                  }
+                    this.setState({ appState: appStates.NEWSYMBOL })}
                   role="button"
                   tabIndex={0}
                 >
                   <Add /> Add symbol
                 </div>
-              )}
+              )} */}
               <GithubIcon />
             </div>
             <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
@@ -507,8 +506,7 @@ class App extends Component {
                           initialDescription={searchTerm}
                           onSubmit={(c) => this.submitNewCommand(c)}
                           onClose={() =>
-                            this.setState({ appState: appStates.SEARCH })
-                          }
+                            this.setState({ appState: appStates.SEARCH })}
                         />
                         {getUserCommands().length > 0 && (
                           <>
@@ -535,8 +533,7 @@ class App extends Component {
                           matches={matches}
                           onClickRow={() => this.clickResult(i)}
                           onCopy={(command) =>
-                            this.copyToClipboard(command, item.descriptions[0])
-                          }
+                            this.copyToClipboard(command, item.descriptions[0])}
                           variant={variant}
                           key={item.id || item.command}
                         />
