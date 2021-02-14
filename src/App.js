@@ -13,7 +13,6 @@ import Table from "@material-ui/core/Table";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import Container from "@material-ui/core/Container";
 import Snackbar from "@material-ui/core/Snackbar";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
@@ -465,8 +464,7 @@ class App extends Component {
           onClose={this.closeSnackbar}
           message={<span id="message-id">{snackBarMessage}</span>}
         />
-        <main>
-          <Container>
+        <main className="container">
             <div className="header">
               <input
                 onChange={(e) => this.updateSearch(e)}
@@ -556,7 +554,6 @@ class App extends Component {
                   <CircularProgress onClick={this.loadMoreResults} />
                 )}
             </div>
-          </Container>
         </main>
       </div>
     );
