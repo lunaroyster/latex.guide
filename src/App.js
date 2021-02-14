@@ -276,6 +276,7 @@ class App extends Component {
     if (this.searchInput.current) {
       this.searchInput.current.focus();
     }
+
     document.addEventListener("keydown", this.keyDown);
     document.addEventListener("keypress", this.pressKey);
 
@@ -465,18 +466,18 @@ class App extends Component {
           message={<span id="message-id">{snackBarMessage}</span>}
         />
         <main className="container">
-            <div className="header">
-              <input
-                onChange={(e) => this.updateSearch(e)}
-                value={searchTerm}
-                ref={this.searchInput}
-                id="searchBox"
-                placeholder="Describe your math symbol..."
-                tabIndex={1}
-                autoComplete="off"
-                aria-label="Type here to search for math symbols in LaTeX"
-              />
-              {/* {appState === appStates.SEARCH && searchTerm.length > 2 && (
+          <div className="header">
+            <input
+              onChange={(e) => this.updateSearch(e)}
+              value={searchTerm}
+              ref={this.searchInput}
+              id="searchBox"
+              placeholder="Describe your math symbol..."
+              tabIndex={1}
+              autoComplete="off"
+              aria-label="Type here to search for math symbols in LaTeX"
+            />
+            {/* {appState === appStates.SEARCH && searchTerm.length > 2 && (
                 <div
                   id="addSymbol"
                   onClick={() =>
@@ -487,73 +488,73 @@ class App extends Component {
                   <Add /> Add symbol
                 </div>
               )} */}
-              <GithubIcon />
+            <GithubIcon />
+          </div>
+          <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
+            <div>
+              <Table>
+                <colgroup>
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "30%" }} />
+                  <col style={{ width: "10%" }} />
+                </colgroup>
+                <TableBody>
+                  {appState === appStates.NEWSYMBOL && (
+                    <>
+                      <NewCommandRow
+                        initialDescription={searchTerm}
+                        onSubmit={(c) => this.submitNewCommand(c)}
+                        onClose={() =>
+                          this.setState({ appState: appStates.SEARCH })}
+                      />
+                      {getUserCommands().length > 0 && (
+                        <>
+                          <div className="user-symbols">Your symbols</div>
+                          {getUserCommands().map((item, i) => (
+                            <CommandRow
+                              index={i}
+                              item={item}
+                              selectedResult={-1}
+                              matches={[]}
+                              key={item.id}
+                            />
+                          ))}
+                        </>
+                      )}
+                    </>
+                  )}
+                  {appState === appStates.SEARCH &&
+                    visibleResults.map(({ item, matches }, i) => (
+                      <CommandRow
+                        index={i}
+                        item={item}
+                        selectedResult={selectedResult}
+                        matches={matches}
+                        onClickRow={() => this.clickResult(i)}
+                        onCopy={(command) =>
+                          this.copyToClipboard(command, item.descriptions[0])}
+                        variant={variant}
+                        key={item.id || item.command}
+                      />
+                    ))}
+                </TableBody>
+              </Table>
             </div>
-            <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
-              <div>
-                <Table>
-                  <colgroup>
-                    <col style={{ width: "25%" }} />
-                    <col style={{ width: "25%" }} />
-                    <col style={{ width: "10%" }} />
-                    <col style={{ width: "30%" }} />
-                    <col style={{ width: "10%" }} />
-                  </colgroup>
-                  <TableBody>
-                    {appState === appStates.NEWSYMBOL && (
-                      <>
-                        <NewCommandRow
-                          initialDescription={searchTerm}
-                          onSubmit={(c) => this.submitNewCommand(c)}
-                          onClose={() =>
-                            this.setState({ appState: appStates.SEARCH })}
-                        />
-                        {getUserCommands().length > 0 && (
-                          <>
-                            <div className="user-symbols">Your symbols</div>
-                            {getUserCommands().map((item, i) => (
-                              <CommandRow
-                                index={i}
-                                item={item}
-                                selectedResult={-1}
-                                matches={[]}
-                                key={item.id}
-                              />
-                            ))}
-                          </>
-                        )}
-                      </>
-                    )}
-                    {appState === appStates.SEARCH &&
-                      visibleResults.map(({ item, matches }, i) => (
-                        <CommandRow
-                          index={i}
-                          item={item}
-                          selectedResult={selectedResult}
-                          matches={matches}
-                          onClickRow={() => this.clickResult(i)}
-                          onCopy={(command) =>
-                            this.copyToClipboard(command, item.descriptions[0])}
-                          variant={variant}
-                          key={item.id || item.command}
-                        />
-                      ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </MathJax.Context>
-            {searchResult.length === 0 && appState === appStates.SEARCH && (
-              <div id="bottomBar">
-                <ProductHuntIcon />
-                <TwitterIcon />
-              </div>
-            )}
-            <div id="loadMoreGutter" className="no-print">
-              {searchResult.length > visibleCount &&
-                appState === appStates.SEARCH && (
-                  <CircularProgress onClick={this.loadMoreResults} />
-                )}
+          </MathJax.Context>
+          {searchResult.length === 0 && appState === appStates.SEARCH && (
+            <div id="bottomBar">
+              <ProductHuntIcon />
+              <TwitterIcon />
             </div>
+          )}
+          <div id="loadMoreGutter" className="no-print">
+            {searchResult.length > visibleCount &&
+              appState === appStates.SEARCH && (
+                <CircularProgress onClick={this.loadMoreResults} />
+              )}
+          </div>
         </main>
       </div>
     );
