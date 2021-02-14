@@ -561,4 +561,46 @@ class App extends Component {
   }
 }
 
-export default App;
+function NewApp() {
+
+  const searchInput = React.useRef()
+  React.useEffect(() => {
+    const onKeyDown = () => {}
+
+    const onKeyPress = () => {}
+
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keypress', onKeyPress);
+
+    // todo: register intersection observer
+    
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keypress', onKeyPress);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (searchInput.current) {
+      searchInput.current.focus();
+    }
+  }, [searchInput])
+
+  const [toastMessage, setToastMessage] = React.useState('');
+
+  return (
+    <div className="App">
+      <Snackbar
+          open={toastMessage.length > 0}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          autoHideDuration={1000}
+          onClose={() => setToastMessage('')}
+          message={<span id="message-id">{toastMessage}</span>}
+        />
+      <main className="container" />
+    </div>
+  );
+}
+
+// export default App;
+export default NewApp;
