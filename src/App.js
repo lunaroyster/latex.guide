@@ -584,9 +584,50 @@ function NewApp() {
     if (searchInput.current) {
       searchInput.current.focus();
     }
-  }, [searchInput])
+  }, [searchInput]);
 
   const [toastMessage, setToastMessage] = React.useState('');
+
+  const copyToClipboard = async (text, copyMessage) => {
+    try {
+      const clipboardPerms = await window.navigator.permissions.query({
+        name: "clipboard-write",
+      });
+      if (
+        clipboardPerms.state === "granted" ||
+        clipboardPerms.state === "prompt"
+      ) {
+        await window.navigator.clipboard.writeText(text);
+        window.gtag("event", "user_copy");
+      }
+    } catch (e) {
+      try {
+        await window.navigator.clipboard.writeText(text);
+        window.gtag("event", "user_copy");
+      } catch (err) {
+        console.log(err);
+      }
+
+      console.log(e);
+    }
+
+    setToastMessage(`Copied ${copyMessage}`);
+  };
+
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const searchResult = [];
+  const visibleCount = 0;
+  const [appState, setAppState] = React.useState(appStates.SEARCH);
+  const [variant, setVariant] = React.useState(0);
+  const [selectedResult, setSelectedResult] = React.useState(0);
+
+  const submitNewCommand = () => {}
+
+  const loadMoreResults = () => {};
+
+  const clickResult = () => {}
+
+  const visibleResults = searchResult.slice(0, visibleCount);
 
   return (
     <div className="App">
@@ -597,7 +638,96 @@ function NewApp() {
           onClose={() => setToastMessage('')}
           message={<span id="message-id">{toastMessage}</span>}
         />
-      <main className="container" />
+      <main className="container">
+        <div className="header">
+            <input
+              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+              ref={searchInput}
+              id="searchBox"
+              placeholder="Describe your math symbol..."
+              tabIndex={1}
+              autoComplete="off"
+              aria-label="Type here to search for math symbols in LaTeX"
+            />
+            {appState === appStates.SEARCH && searchTerm.length > 2 && (
+                <div
+                  id="addSymbol"
+                  onClick={() => {}}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <Add /> Add symbol
+                </div>
+              )}
+            <GithubIcon />
+        </div>
+        <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
+            <div>
+              <Table>
+                <colgroup>
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "25%" }} />
+                  <col style={{ width: "10%" }} />
+                  <col style={{ width: "30%" }} />
+                  <col style={{ width: "10%" }} />
+                </colgroup>
+                <TableBody>
+                  {appState === appStates.NEWSYMBOL && (
+                    <>
+                      <NewCommandRow
+                        initialDescription={searchTerm}
+                        onSubmit={(c) => submitNewCommand(c)}
+                        onClose={() =>
+                          setAppState(appStates.SEARCH)}
+                      />
+                      {getUserCommands().length > 0 && (
+                        <>
+                          <div className="user-symbols">Your symbols</div>
+                          {getUserCommands().map((item, i) => (
+                            <CommandRow
+                              index={i}
+                              item={item}
+                              selectedResult={-1}
+                              matches={[]}
+                              key={item.id}
+                            />
+                          ))}
+                        </>
+                      )}
+                    </>
+                  )}
+                  {appState === appStates.SEARCH &&
+                    visibleResults.map(({ item, matches }, i) => (
+                      <CommandRow
+                        index={i}
+                        item={item}
+                        selectedResult={selectedResult}
+                        matches={matches}
+                        onClickRow={() => clickResult(i)}
+                        onCopy={(command) =>
+                          copyToClipboard(command, item.descriptions[0])}
+                        variant={variant}
+                        key={item.id || item.command}
+                      />
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
+          </MathJax.Context>
+        {searchResult.length === 0 && appState === appStates.SEARCH && (
+          <div id="bottomBar">
+            <ProductHuntIcon />
+            <TwitterIcon />
+          </div>
+        )}
+        <div id="loadMoreGutter" className="no-print">
+            {searchResult.length > visibleCount &&
+              appState === appStates.SEARCH && (
+                <CircularProgress onClick={loadMoreResults} />
+              )}
+          </div>
+      </main>
     </div>
   );
 }
