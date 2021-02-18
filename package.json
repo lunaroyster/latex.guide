@@ -12,7 +12,6 @@
     "react-dom": "^17.0.1",
     "react-mathjax2": "git+https://github.com/lunaroyster/react-mathjax.git",
     "react-scripts": "4.0.2",
-    "rxjs": "^6.6.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
