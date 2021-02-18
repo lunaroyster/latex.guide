@@ -618,6 +618,13 @@ function NewApp() {
     }
   };
 
+  const loadMoreResults = () => {
+    if (searchResult.length > visibleCount) {
+      setVisibleCount(visibleCount+5);
+    }
+  };
+
+
   React.useEffect(() => {
     const onKeyDown = (e) => {
       if (appState === appStates.NEWSYMBOL) {
@@ -671,6 +678,21 @@ function NewApp() {
   }, [appState, selectNext, selectPrevious, nextVariant, lastVariant]);
 
   React.useEffect(() => {
+    const callback = (r) => {
+      const entry = r[0];
+      if (entry.isIntersecting) {
+        loadMoreResults();
+      }
+    };
+
+    const observer = new window.IntersectionObserver(callback, {
+      rootMargin: "0px",
+      threshold: 0.1,
+    });
+    observer.observe(document.querySelector("#loadMoreGutter"));
+  }, [loadMoreResults])
+
+  React.useEffect(() => {
     if (searchInput.current) {
       searchInput.current.focus();
     }
@@ -707,12 +729,6 @@ function NewApp() {
   };
 
   const submitNewCommand = () => {}
-
-  const loadMoreResults = () => {
-    if (searchResult.length > visibleCount) {
-      setVisibleCount(visibleCount+5);
-    }
-  };
 
   const visibleResults = searchResult.slice(0, visibleCount);
 
