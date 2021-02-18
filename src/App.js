@@ -242,327 +242,7 @@ function NewCommandRow({ initialDescription, onSubmit, onClose }) {
   );
 }
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.searchInput = React.createRef();
-    this.latexSearch = getFuse();
-    this.searchTermChange = new Subject();
-    this.searchTermChange.subscribe((e) => {
-      const term = e.target.value;
-      this.setState({ searchTerm: term });
-    });
-    this.searchTermChange.pipe(debounceTime(90)).subscribe(() => {
-      const term = this.state.searchTerm;
-      const results = term.length === 0 ? [] : this.latexSearch.search(term);
-      this.setState({
-        searchResult: results,
-        selectedResult: 0,
-        appState: appStates.SEARCH,
-        visibleCount: 12,
-      });
-    });
-    this.state = {
-      searchTerm: "",
-      searchResult: [],
-      selectedResult: 0,
-      snackBarMessage: "",
-      appState: appStates.SEARCH,
-      visibleCount: 12,
-      variant: -1,
-    };
-  }
-  componentDidMount() {
-    if (this.searchInput.current) {
-      this.searchInput.current.focus();
-    }
-
-    document.addEventListener("keydown", this.keyDown);
-    document.addEventListener("keypress", this.pressKey);
-
-    const callback = (r) => {
-      const entry = r[0];
-      if (entry.isIntersecting) {
-        this.loadMoreResults();
-      }
-    };
-
-    const observer = new window.IntersectionObserver(callback, {
-      rootMargin: "0px",
-      threshold: 0.1,
-    });
-    observer.observe(document.querySelector("#loadMoreGutter"));
-  }
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.keyDown);
-    document.removeEventListener("keypress", this.pressKey);
-  }
-
-  loadMoreResults = () => {
-    if (this.state.searchResult.length > this.state.visibleCount) {
-      this.setState({
-        visibleCount: this.state.visibleCount + 5,
-      });
-    }
-  };
-  copyToClipboard = async (text, copyMessage) => {
-    try {
-      const clipboardPerms = await window.navigator.permissions.query({
-        name: "clipboard-write",
-      });
-      if (
-        clipboardPerms.state === "granted" ||
-        clipboardPerms.state === "prompt"
-      ) {
-        await window.navigator.clipboard.writeText(text);
-        window.gtag("event", "user_copy");
-      }
-    } catch (e) {
-      try {
-        await window.navigator.clipboard.writeText(text);
-        window.gtag("event", "user_copy");
-      } catch (err) {
-        console.log(err);
-      }
-
-      console.log(e);
-    }
-
-    this.setState({ snackBarMessage: `Copied ${copyMessage}` });
-  };
-  updateSearch = (e) => {
-    this.searchTermChange.next(e);
-  };
-  clickResult = (index) => {
-    this.setState({ selectedResult: index });
-  };
-  pressKey = (e) => {
-    if (e.key === "Enter" && this.state.appState === appStates.SEARCH) {
-      const res = this.state.searchResult[this.state.selectedResult];
-      if (res) {
-        this.copyToClipboard(res.item.command, res.item.descriptions[0]);
-      }
-    }
-  };
-  scrollToResult = () => {
-    const selectedResult = document.querySelector(".result.selected");
-    if (selectedResult) {
-      selectedResult.scrollIntoViewIfNeeded();
-    }
-  };
-  nextVariant = () => {
-    const { searchResult, selectedResult, variant } = this.state;
-    const current = searchResult[selectedResult].item;
-    if (
-      current.variants &&
-      current.variants.length > 0 &&
-      variant < current.variants.length - 1
-    ) {
-      this.setState({ variant: variant + 1 });
-    }
-  };
-  lastVariant = () => {
-    const { searchResult, selectedResult, variant } = this.state;
-    const current = searchResult[selectedResult].item;
-    if (current.variants && current.variants.length > 0 && variant >= 0) {
-      this.setState({ variant: variant - 1 });
-    }
-  };
-  selectNext = () => {
-    const { selectedResult, searchResult } = this.state;
-    const index =
-      selectedResult + 1 >= searchResult.length ? 0 : selectedResult + 1;
-    const update = { selectedResult: index };
-    update.variant = -1;
-    this.setState(update);
-    this.scrollToResult();
-    // window.gtag('event', 'select_next');
-  };
-  selectPrevious = () => {
-    const { selectedResult, searchResult } = this.state;
-    const index =
-      selectedResult === 0 ? searchResult.length - 1 : selectedResult - 1;
-    const update = { selectedResult: index };
-    update.variant = -1;
-    this.setState(update);
-    this.scrollToResult();
-    // window.gtag('event', 'select_previous');
-  };
-  keyDown = (e) => {
-    if (this.state.appState === appStates.NEWSYMBOL) {
-      return;
-    }
-
-    if (e.key === "Tab") {
-      (e.shiftKey ? this.selectPrevious : this.selectNext)();
-      e.preventDefault();
-    }
-
-    if (e.key === "ArrowDown") {
-      this.selectNext();
-      e.preventDefault();
-    }
-
-    if (e.key === "ArrowUp") {
-      this.selectPrevious();
-      e.preventDefault();
-    }
-
-    if (e.key === "ArrowRight") {
-      this.nextVariant();
-      e.preventDefault();
-    }
-
-    if (e.key === "ArrowLeft") {
-      this.lastVariant();
-      e.preventDefault();
-    }
-  };
-  closeSnackbar = () => this.setState({ snackBarMessage: "" });
-  submitNewCommand = (command) => {
-    let currentCommands;
-    try {
-      const c = window.localStorage.getItem("user/commands");
-      if (c && typeof c === "string") {
-        currentCommands = JSON.parse(c);
-      } else {
-        currentCommands = {};
-      }
-
-      currentCommands[command.id] = command;
-
-      window.localStorage.setItem(
-        "user/commands",
-        JSON.stringify(currentCommands)
-      );
-      this.setState({
-        appState: appStates.SEARCH,
-        snackBarMessage: `Added symbol: ${command.descriptions[0]}`,
-      });
-      this.latexSearch = getFuse();
-    } catch (e) {
-      this.setState({ snackBarMessage: "Something went wrong." });
-    }
-  };
-  render() {
-    const {
-      searchTerm,
-      selectedResult,
-      searchResult,
-      snackBarMessage,
-      appState,
-      visibleCount,
-      variant,
-    } = this.state;
-    const visibleResults = searchResult.slice(0, visibleCount);
-
-    return (
-      <div className="App">
-        <Snackbar
-          open={snackBarMessage.length > 0}
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-          autoHideDuration={1000}
-          onClose={this.closeSnackbar}
-          message={<span id="message-id">{snackBarMessage}</span>}
-        />
-        <main className="container">
-          <div className="header">
-            <input
-              onChange={(e) => this.updateSearch(e)}
-              value={searchTerm}
-              ref={this.searchInput}
-              id="searchBox"
-              placeholder="Describe your math symbol..."
-              tabIndex={1}
-              autoComplete="off"
-              aria-label="Type here to search for math symbols in LaTeX"
-            />
-            {/* {appState === appStates.SEARCH && searchTerm.length > 2 && (
-                <div
-                  id="addSymbol"
-                  onClick={() =>
-                    this.setState({ appState: appStates.NEWSYMBOL })}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <Add /> Add symbol
-                </div>
-              )} */}
-            <GithubIcon />
-          </div>
-          <MathJax.Context input="tex" options={{ messageStyle: "none" }}>
-            <div>
-              <Table>
-                <colgroup>
-                  <col style={{ width: "25%" }} />
-                  <col style={{ width: "25%" }} />
-                  <col style={{ width: "10%" }} />
-                  <col style={{ width: "30%" }} />
-                  <col style={{ width: "10%" }} />
-                </colgroup>
-                <TableBody>
-                  {appState === appStates.NEWSYMBOL && (
-                    <>
-                      <NewCommandRow
-                        initialDescription={searchTerm}
-                        onSubmit={(c) => this.submitNewCommand(c)}
-                        onClose={() =>
-                          this.setState({ appState: appStates.SEARCH })}
-                      />
-                      {getUserCommands().length > 0 && (
-                        <>
-                          <div className="user-symbols">Your symbols</div>
-                          {getUserCommands().map((item, i) => (
-                            <CommandRow
-                              index={i}
-                              item={item}
-                              selectedResult={-1}
-                              matches={[]}
-                              key={item.id}
-                            />
-                          ))}
-                        </>
-                      )}
-                    </>
-                  )}
-                  {appState === appStates.SEARCH &&
-                    visibleResults.map(({ item, matches }, i) => (
-                      <CommandRow
-                        index={i}
-                        item={item}
-                        selectedResult={selectedResult}
-                        matches={matches}
-                        onClickRow={() => this.clickResult(i)}
-                        onCopy={(command) =>
-                          this.copyToClipboard(command, item.descriptions[0])}
-                        variant={variant}
-                        key={item.id || item.command}
-                      />
-                    ))}
-                </TableBody>
-              </Table>
-            </div>
-          </MathJax.Context>
-          {searchResult.length === 0 && appState === appStates.SEARCH && (
-            <div id="bottomBar">
-              <ProductHuntIcon />
-              <TwitterIcon />
-            </div>
-          )}
-          <div id="loadMoreGutter" className="no-print">
-            {searchResult.length > visibleCount &&
-              appState === appStates.SEARCH && (
-                <CircularProgress onClick={this.loadMoreResults} />
-              )}
-          </div>
-        </main>
-      </div>
-    );
-  }
-}
-
-function NewApp() {
-
+function App() {
   const searchInput = React.useRef();
 
   const latexSearch = React.useMemo(() => getFuse());
@@ -704,6 +384,9 @@ function NewApp() {
 
   React.useEffect(() => {
     setSearchResult(latexSearch.search(searchTerm));
+    setSelectedResult(0);
+    setAppState(appStates.SEARCH);
+    setVisibleCount(12);
   }, [searchTerm])
 
   const copyToClipboard = async (text, copyMessage) => {
@@ -732,7 +415,29 @@ function NewApp() {
     setToastMessage(`Copied ${copyMessage}`);
   };
 
-  const submitNewCommand = () => {}
+  const submitNewCommand = (command) => {
+    let currentCommands;
+    try {
+      const c = window.localStorage.getItem("user/commands");
+      if (c && typeof c === "string") {
+        currentCommands = JSON.parse(c);
+      } else {
+        currentCommands = {};
+      }
+
+      currentCommands[command.id] = command;
+
+      window.localStorage.setItem(
+        "user/commands",
+        JSON.stringify(currentCommands)
+      );
+      setAppState(appStates.SEARCH);
+      setToastMessage(`Added symbol: ${command.descriptions[0]}`);
+      // this.latexSearch = getFuse();
+    } catch (e) {
+      setToastMessage('Something went wrong');
+    }
+  }
 
   const visibleResults = searchResult.slice(0, visibleCount);
 
@@ -839,5 +544,4 @@ function NewApp() {
   );
 }
 
-// export default App;
-export default NewApp;
+export default App;
