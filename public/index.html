@@ -48,7 +48,7 @@
           let visitedBefore = localStorage.getItem("visitedBefore");
           if (visitedBefore) return;
           fetch(
-            "https://us-central1-random-arts.cloudfunctions.net/visitedLatexSearch"
+            "https://latexguide-api.arnavbansal.repl.co/user-online"
           );
           localStorage.setItem("visitedBefore", true);
         } catch (e) {}
