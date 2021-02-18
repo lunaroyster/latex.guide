@@ -690,6 +690,10 @@ function NewApp() {
       threshold: 0.1,
     });
     observer.observe(document.querySelector("#loadMoreGutter"));
+
+    return () => {
+      observer.disconnect();
+    }
   }, [loadMoreResults])
 
   React.useEffect(() => {
