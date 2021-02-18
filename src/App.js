@@ -259,7 +259,7 @@ class App extends Component {
         searchResult: results,
         selectedResult: 0,
         appState: appStates.SEARCH,
-        visibleCount: 15,
+        visibleCount: 12,
       });
     });
     this.state = {
@@ -563,11 +563,101 @@ class App extends Component {
 
 function NewApp() {
 
-  const searchInput = React.useRef()
-  React.useEffect(() => {
-    const onKeyDown = () => {}
+  const searchInput = React.useRef();
 
-    const onKeyPress = () => {}
+  const latexSearch = React.useMemo(() => getFuse());
+
+  const [toastMessage, setToastMessage] = React.useState('');
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchResult, setSearchResult] = React.useState([]);
+  const [visibleCount, setVisibleCount] = React.useState(12);
+  const [appState, setAppState] = React.useState(appStates.SEARCH);
+  const [selectedResult, setSelectedResult] = React.useState(0);
+  const [variant, setVariant] = React.useState(-1);
+
+  const scrollToResult = () => {
+    const selectedResultDiv = document.querySelector(".result.selected");
+    if (selectedResultDiv) {
+      selectedResultDiv.scrollIntoViewIfNeeded();
+    }
+  };
+
+  const selectNext = React.useCallback(() => {
+    const index =
+      selectedResult + 1 >= searchResult.length ? 0 : selectedResult + 1;
+    setSelectedResult(index);
+    setVariant(-1);
+    scrollToResult();
+    // window.gtag('event', 'select_next');
+  }, [searchResult, selectedResult, scrollToResult])
+
+  const selectPrevious = React.useCallback(() => {
+    const index =
+    selectedResult === 0 ? searchResult.length - 1 : selectedResult - 1;
+    setSelectedResult(index);
+    setVariant(-1);
+    scrollToResult();
+    // window.gtag('event', 'select_next');
+  }, [searchResult, selectedResult, scrollToResult])
+
+  const nextVariant = () => {
+    const current = searchResult[selectedResult].item;
+    if (
+      current.variants &&
+      current.variants.length > 0 &&
+      variant < current.variants.length - 1
+    ) {
+      setVariant(variant + 1);
+    }
+  };
+
+  const lastVariant = () => {
+    const current = searchResult[selectedResult].item;
+    if (current.variants && current.variants.length > 0 && variant >= 0) {
+      setVariant(variant - 1);
+    }
+  };
+
+  React.useEffect(() => {
+    const onKeyDown = (e) => {
+      if (appState === appStates.NEWSYMBOL) {
+        return;
+      }
+  
+      if (e.key === "Tab") {
+        (e.shiftKey ? selectPrevious : selectNext)();
+        e.preventDefault();
+      }
+  
+      if (e.key === "ArrowDown") {
+        selectNext();
+        e.preventDefault();
+      }
+  
+      if (e.key === "ArrowUp") {
+        selectPrevious();
+        e.preventDefault();
+      }
+  
+      if (e.key === "ArrowRight") {
+        nextVariant();
+        e.preventDefault();
+      }
+  
+      if (e.key === "ArrowLeft") {
+        lastVariant();
+        e.preventDefault();
+      }
+    }
+
+    const onKeyPress = (e) => {
+      if (e.key === "Enter" && appState === appStates.SEARCH) {
+        const res = searchResult[selectedResult];
+        if (res) {
+          copyToClipboard(res.item.command, res.item.descriptions[0]);
+        }
+      }
+    }
 
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keypress', onKeyPress);
@@ -578,7 +668,7 @@ function NewApp() {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keypress', onKeyPress);
     }
-  }, []);
+  }, [appState, selectNext, selectPrevious, nextVariant, lastVariant]);
 
   React.useEffect(() => {
     if (searchInput.current) {
@@ -586,7 +676,9 @@ function NewApp() {
     }
   }, [searchInput]);
 
-  const [toastMessage, setToastMessage] = React.useState('');
+  React.useEffect(() => {
+    setSearchResult(latexSearch.search(searchTerm));
+  }, [searchTerm])
 
   const copyToClipboard = async (text, copyMessage) => {
     try {
@@ -614,18 +706,13 @@ function NewApp() {
     setToastMessage(`Copied ${copyMessage}`);
   };
 
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const searchResult = [];
-  const visibleCount = 0;
-  const [appState, setAppState] = React.useState(appStates.SEARCH);
-  const [variant, setVariant] = React.useState(0);
-  const [selectedResult, setSelectedResult] = React.useState(0);
-
   const submitNewCommand = () => {}
 
-  const loadMoreResults = () => {};
-
-  const clickResult = () => {}
+  const loadMoreResults = () => {
+    if (searchResult.length > visibleCount) {
+      setVisibleCount(visibleCount+5);
+    }
+  };
 
   const visibleResults = searchResult.slice(0, visibleCount);
 
@@ -704,7 +791,7 @@ function NewApp() {
                         item={item}
                         selectedResult={selectedResult}
                         matches={matches}
-                        onClickRow={() => clickResult(i)}
+                        onClickRow={() => setSelectedResult(i)}
                         onCopy={(command) =>
                           copyToClipboard(command, item.descriptions[0])}
                         variant={variant}
