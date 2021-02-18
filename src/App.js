@@ -408,7 +408,7 @@ function App() {
       console.log(e);
     }
 
-    setToastMessage(`Copied ${copyMessage}`);
+    setToastMessage(`Copied '${copyMessage}'`);
   };
 
   const submitNewCommand = (command) => {
