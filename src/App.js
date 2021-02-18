@@ -285,14 +285,22 @@ function App() {
       variant < current.variants.length - 1
     ) {
       setVariant(variant + 1);
+
+      return true;
     }
+
+    return false;
   };
 
   const lastVariant = () => {
     const current = searchResult[selectedResult].item;
     if (current.variants && current.variants.length > 0 && variant >= 0) {
       setVariant(variant - 1);
+
+      return true;
     }
+
+    return false;
   };
 
   const loadMoreResults = () => {
@@ -323,13 +331,15 @@ function App() {
       }
 
       if (e.key === "ArrowRight") {
-        nextVariant();
-        e.preventDefault();
+        if (nextVariant()) {
+          e.preventDefault();
+        }
       }
 
       if (e.key === "ArrowLeft") {
-        lastVariant();
-        e.preventDefault();
+        if (lastVariant()) {
+          e.preventDefault();
+        }
       }
     };
 
