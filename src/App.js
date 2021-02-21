@@ -395,6 +395,18 @@ function App() {
     setVisibleCount(12);
   }, [searchTerm]);
 
+  React.useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const term = params.get('q');
+      if (term) {
+        setSearchTerm(term);
+      }
+    } catch (e) {
+      return null;
+    }
+  }, [])
+
   const copyToClipboard = async (text, copyMessage) => {
     try {
       const clipboardPerms = await window.navigator.permissions.query({
