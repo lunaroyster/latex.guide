@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
- <ShortName>Search latex.guide</ShortName>
+ <ShortName>latex.guide</ShortName>
  <Description>Search for LaTeX symbols</Description>
  <Url type="text/html" method="get" template="https://latex.guide/?q={searchTerms}"/>
 </OpenSearchDescription>
