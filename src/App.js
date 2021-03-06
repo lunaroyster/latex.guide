@@ -50,8 +50,6 @@ const getFuse = () => {
 
   commands = commands.map(c => ({...c, descriptions: [...c.descriptions, ...zhCommands[c.command].descriptions]}));
 
-  console.log(commands);
-
   commands.push(...getUserCommands());
 
   return new Fuse(commands, searchConfig);
