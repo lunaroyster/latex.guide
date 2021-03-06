@@ -257,7 +257,7 @@ function NewCommandRow({ initialDescription, onSubmit, onClose }) {
 function App() {
   const searchInput = React.useRef();
 
-  const latexSearch = React.useMemo(() => getFuse());
+  const latexSearch = React.useMemo(() => getFuse(), []);
 
   const [toastMessage, setToastMessage] = React.useState("");
   const [searchTerm, setSearchTerm] = React.useState("");
