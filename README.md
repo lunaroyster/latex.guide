@@ -9,7 +9,7 @@
 
 ## How to contribute:
 
-The file containing LaTeX commands is located at src/Commands.js
+The file containing LaTeX commands is located at `src/Commands.js`
 
 Fields:
 
@@ -17,7 +17,7 @@ Fields:
 - `example`: A typical use of the command, used to generate the LaTeX preview
 - `command`: The command itself. This is copied.
 
-More fields will be added later.
+To add a translation, see `src/i18n`
 
 ## Setting up your dev environment.
 
@@ -29,3 +29,7 @@ More fields will be added later.
   - Run `npm install` inside the repository.
   - Once that completes, run `npm run start`.
   - The web app should be available at `localhost:3000`
+
+## Credits
+
+- Chinese Translation: [@gzliyu](https://github.com/gzliyu)
