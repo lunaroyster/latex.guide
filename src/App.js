@@ -49,8 +49,14 @@ const getFuse = () => {
   let commands = [...Commands];
 
   try {
-    if (window.navigator.languages.find(lang => /^zh(-CN)?$/.test(lang))) {
-      commands = commands.map(c => ({...c, descriptions: [...c.descriptions, ...zhCommands[c.command].descriptions]}));
+    if (window.navigator.languages.find((lang) => /^zh(-CN)?$/.test(lang))) {
+      commands = commands.map((c) => ({
+        ...c,
+        descriptions: [
+          ...c.descriptions,
+          ...zhCommands[c.command].descriptions,
+        ],
+      }));
     }
   } catch (e) {
     console.log(e);
@@ -407,14 +413,14 @@ function App() {
   React.useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
-      const term = params.get('q');
+      const term = params.get("q");
       if (term) {
         setSearchTerm(term);
       }
     } catch (e) {
       return null;
     }
-  }, [])
+  }, []);
 
   const copyToClipboard = async (text, copyMessage) => {
     try {
