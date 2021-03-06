@@ -1,4 +1,4 @@
-const x = {
+const zhCNCommands = {
   "\\to": { descriptions: ["映射到", "箭头"] },
   "\\frac{}{}": { descriptions: ["分数"] },
   "\\sqrt{}": { descriptions: ["根号"] },
@@ -140,4 +140,4 @@ const x = {
   "\\omega": { descriptions: [] },
 };
 
-module.exports = x;
+module.exports = zhCNCommands;
