@@ -19,6 +19,7 @@ import Add from "@material-ui/icons/Add";
 import "./App.scss";
 
 import Commands from "./Commands";
+import zhCommands from "./i18n/zh";
 
 import Fuse from "fuse.js";
 
@@ -26,7 +27,7 @@ const searchConfig = {
   keys: ["command", "descriptions"],
   includeMatches: true,
   shouldSort: true,
-  minMatchCharLength: 2,
+  minMatchCharLength: 1,
 };
 
 const getUserCommands = () => {
@@ -45,7 +46,11 @@ const getUserCommands = () => {
 };
 
 const getFuse = () => {
-  const commands = [...Commands];
+  let commands = [...Commands];
+
+  commands = commands.map(c => ({...c, descriptions: [...c.descriptions, ...zhCommands[c.command].descriptions]}));
+
+  console.log(commands);
 
   commands.push(...getUserCommands());
 
