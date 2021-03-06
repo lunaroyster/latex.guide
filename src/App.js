@@ -19,7 +19,7 @@ import Add from "@material-ui/icons/Add";
 import "./App.scss";
 
 import Commands from "./Commands";
-import zhCommands from "./i18n/zh";
+import zhCommands from "./i18n/zh-CN";
 
 import Fuse from "fuse.js";
 
@@ -48,7 +48,13 @@ const getUserCommands = () => {
 const getFuse = () => {
   let commands = [...Commands];
 
-  commands = commands.map(c => ({...c, descriptions: [...c.descriptions, ...zhCommands[c.command].descriptions]}));
+  try {
+    if (window.navigator.languages.find(lang => /^zh(-CN)?$/.test(lang))) {
+      commands = commands.map(c => ({...c, descriptions: [...c.descriptions, ...zhCommands[c.command].descriptions]}));
+    }
+  } catch (e) {
+    console.log(e);
+  }
 
   commands.push(...getUserCommands());
 
